@@ -1,0 +1,63 @@
+---
+description:
+globs:
+alwaysApply: false
+---
+# Blog Post Standards
+
+## Context
+- Applies to all MDX blog posts
+- Ensures consistent blog post structure
+- Maintains SEO and content quality
+- Supports proper rendering and metadata
+
+## Critical Rules
+- Include required frontmatter fields
+- Use proper heading hierarchy
+- Optimize images with next/image
+- Include proper meta descriptions
+- Use semantic HTML elements
+- Implement proper code block formatting
+
+## Examples
+
+<example>
+---
+title: "Building a Modern Portfolio"
+description: "Learn how to create a modern portfolio website using Next.js and TypeScript"
+date: "2024-03-20"
+author: "Your Name"
+tags: ["Next.js", "TypeScript", "Web Development"]
+---
+
+# Building a Modern Portfolio
+
+## Introduction
+Modern web development requires...
+
+## Getting Started
+To begin building your portfolio...
+
+```typescript
+// Code example with proper formatting
+const Portfolio = () => {
+  return <div>Hello World</div>;
+};
+```
+
+## Conclusion
+Building a portfolio website...
+</example>
+
+<example type="invalid">
+# My Blog Post
+
+Here's some content without proper structure.
+
+```js
+// Poorly formatted code
+const x = () => {return <div>Hello</div>}
+```
+
+More content without proper organization.
+</example>

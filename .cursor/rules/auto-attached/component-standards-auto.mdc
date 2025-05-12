@@ -1,0 +1,81 @@
+---
+description:
+globs:
+alwaysApply: false
+---
+# Component Development Standards
+
+## Context
+- Applies to all React components
+- Ensures consistent component structure
+- Maintains type safety and reusability
+- Follows atomic design principles
+
+## Critical Rules
+- Use TypeScript for all components
+- Implement proper prop types
+- Follow atomic design methodology
+- Include proper accessibility attributes
+- Use semantic HTML elements
+- Implement proper error boundaries
+- Follow mobile-first responsive design
+
+## Examples
+
+<example>
+import { FC } from 'react';
+import Image from 'next/image';
+import type { Project } from '@/types';
+
+interface ProjectCardProps {
+  project: Project;
+  onViewDetails: (id: string) => void;
+}
+
+export const ProjectCard: FC<ProjectCardProps> = ({ 
+  project, 
+  onViewDetails 
+}) => {
+  return (
+    <article 
+      className="rounded-lg shadow-lg overflow-hidden"
+      role="article"
+    >
+      <div className="relative h-48">
+        <Image
+          src={project.image}
+          alt={project.title}
+          fill
+          className="object-cover"
+        />
+      </div>
+      <div className="p-4">
+        <h3 className="text-xl font-bold">{project.title}</h3>
+        <p className="mt-2 text-gray-600">{project.description}</p>
+        <button
+          onClick={() => onViewDetails(project.id)}
+          className="mt-4 px-4 py-2 bg-primary text-white rounded"
+          aria-label={`View details for ${project.title}`}
+        >
+          View Details
+        </button>
+      </div>
+    </article>
+  );
+};
+</example>
+
+<example type="invalid">
+const ProjectCard = ({ project }) => {
+  return (
+    <div>
+      <img src={project.image} />
+      <h3>{project.title}</h3>
+      <p>{project.description}</p>
+      <button onClick={() => onViewDetails(project.id)}>
+        View Details
+      </button>
+    </div>
+  );
+};
+</example>

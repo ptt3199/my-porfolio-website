@@ -1,0 +1,89 @@
+---
+description:
+globs:
+alwaysApply: false
+---
+# Portfolio Website Development Standards
+
+## Context
+- Applies to all portfolio website development work
+- Ensures consistent implementation of features and standards
+- Based on Next.js 14, TypeScript, and Tailwind CSS stack
+- Enforces best practices for performance, accessibility, and security
+
+## Critical Rules
+
+### Code Structure
+- All components must use TypeScript (.tsx extension)
+- Follow Next.js 14 App Router conventions
+- Use atomic design methodology for components
+- Implement proper type definitions for all props and data
+
+### Feature Implementation
+- Home page must include hero section and featured projects
+- Blog posts must use MDX format with frontmatter
+- CV page must support PDF download
+- Contact form must include client and server validation
+- Navigation must be responsive with mobile menu
+
+### Quality Standards
+- Implement mobile-first responsive design
+- Follow WCAG 2.1 accessibility guidelines
+- Optimize images and assets for performance
+- Implement proper meta tags for SEO
+- Test across major browsers (Chrome, Firefox, Safari)
+
+### Documentation
+- Document all components with JSDoc comments
+- Include README updates for new features
+- Document API routes and endpoints
+- Maintain up-to-date type definitions
+
+### Security
+- Implement CSRF protection for forms
+- Use environment variables for sensitive data
+- Sanitize user inputs
+- Implement rate limiting for API routes
+
+## Examples
+
+<example>
+// Good component structure
+import { FC } from 'react';
+import type { BlogPost } from '@/types';
+
+interface BlogCardProps {
+  post: BlogPost;
+  onReadMore: (slug: string) => void;
+}
+
+export const BlogCard: FC<BlogCardProps> = ({ post, onReadMore }) => {
+  return (
+    <article className="rounded-lg shadow-md p-4">
+      <h2 className="text-xl font-bold">{post.title}</h2>
+      <p className="mt-2">{post.excerpt}</p>
+      <button 
+        onClick={() => onReadMore(post.slug)}
+        className="mt-4 px-4 py-2 bg-primary text-white rounded"
+      >
+        Read More
+      </button>
+    </article>
+  );
+};
+</example>
+
+<example type="invalid">
+// Bad component structure
+const BlogCard = ({ post }) => {
+  return (
+    <div>
+      <h2>{post.title}</h2>
+      <p>{post.excerpt}</p>
+      <button onClick={() => onReadMore(post.slug)}>
+        Read More
+      </button>
+    </div>
+  );
+};
+</example>
