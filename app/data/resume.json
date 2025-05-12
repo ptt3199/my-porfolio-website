@@ -1,0 +1,68 @@
+{
+  "title": {
+    "name": "Phuong Tan Thanh",
+    "tagline": "Backend Developer · FastAPI · PostgreSQL · DevOps",
+    "avatar": "/avatar.png"
+  },
+  "about": "Experienced backend developer with a strong focus on building scalable systems and elegant solutions. Passionate about backend architecture, distributed systems, and developer experience. Committed to writing clean, maintainable code and implementing robust DevOps practices.",
+  "experience": [
+    {
+      "position": "Backend Developer",
+      "company": "Company Name",
+      "location": "Location",
+      "period": "2021 - Present",
+      "description": "Lead backend development for multiple high-impact projects, focusing on scalable architectures and efficient data processing.",
+      "responsibilities": [
+        "Designed and implemented RESTful APIs using FastAPI and PostgreSQL",
+        "Orchestrated microservices deployment using Docker and Kubernetes",
+        "Implemented automated CI/CD pipelines reducing deployment time by 60%",
+        "Optimized database queries improving system performance by 40%"
+      ],
+      "skills": ["FastAPI", "PostgreSQL", "Docker", "Kubernetes", "Redis", "Celery"]
+    }
+  ],
+  "education": [
+    {
+      "school": "University Name",
+      "major": "Computer Science",
+      "degree": "Bachelor of Science",
+      "period": "2017 - 2021",
+      "skills": ["Algorithms", "Data Structures", "Software Engineering", "Database Systems"]
+    }
+  ],
+  "projects": [
+    {
+      "name": "Portfolio Website",
+      "description": "Personal portfolio website built with Next.js and Tailwind CSS, featuring dark mode, background music, and dynamic content.",
+      "link": "https://github.com/yourusername/portfolio",
+      "skills": ["Next.js", "TypeScript", "Tailwind CSS", "React"]
+    },
+    {
+      "name": "Task Management API",
+      "description": "RESTful API for task management with authentication, real-time notifications, and automated task scheduling.",
+      "link": "https://github.com/yourusername/task-api",
+      "skills": ["FastAPI", "PostgreSQL", "Redis", "Celery", "Docker"]
+    }
+  ],
+  "skills": {
+    "Backend": ["Python", "FastAPI", "Django", "Node.js", "Express"],
+    "Databases": ["PostgreSQL", "MongoDB", "Redis", "Elasticsearch"],
+    "DevOps": ["Docker", "Kubernetes", "AWS", "CI/CD", "Terraform"],
+    "Frontend": ["React", "TypeScript", "Next.js", "Tailwind CSS"],
+    "Tools": ["Git", "Linux", "Nginx", "RabbitMQ", "Prometheus", "Grafana"]
+  },
+  "certifications": [
+    {
+      "name": "AWS Certified Solutions Architect",
+      "issuer": "Amazon Web Services",
+      "date": "2023",
+      "link": "https://aws.amazon.com/certification/"
+    },
+    {
+      "name": "Kubernetes Certified Administrator",
+      "issuer": "Cloud Native Computing Foundation",
+      "date": "2022",
+      "link": "https://www.cncf.io/certification/cka/"
+    }
+  ]
+} 

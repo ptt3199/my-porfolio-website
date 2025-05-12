@@ -1,57 +1,11 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { ArrowRight, RefreshCw, Music2 } from 'lucide-react'
+import { ArrowRight, RefreshCw } from 'lucide-react'
 import quotes from '../data/quotes.json'
 
 export function Footer() {
   const [quoteIndex, setQuoteIndex] = useState(0)
-  const [isPlaying, setIsPlaying] = useState(false)
-  const [player, setPlayer] = useState<YT.Player | null>(null)
-
-  useEffect(() => {
-    // Load YouTube IFrame API
-    const tag = document.createElement('script')
-    tag.src = 'https://www.youtube.com/iframe_api'
-    const firstScriptTag = document.getElementsByTagName('script')[0]
-    firstScriptTag.parentNode?.insertBefore(tag, firstScriptTag)
-
-    // Initialize player when API is ready
-    window.onYouTubeIframeAPIReady = () => {
-      const newPlayer = new YT.Player('youtube-player', {
-        height: '0',
-        width: '0',
-        playerVars: {
-          listType: 'playlist',
-          list: process.env.NEXT_PUBLIC_YOUTUBE_PLAYLIST_ID,
-          controls: 0,
-          showinfo: 0,
-          modestbranding: 1,
-          loop: 1,
-        },
-        events: {
-          onStateChange: event => {
-            setIsPlaying(event.data === YT.PlayerState.PLAYING)
-          },
-        },
-      })
-      setPlayer(newPlayer)
-    }
-
-    return () => {
-      player?.destroy()
-    }
-  }, [])
-
-  const togglePlay = () => {
-    if (player) {
-      if (isPlaying) {
-        player.pauseVideo()
-      } else {
-        player.playVideo()
-      }
-    }
-  }
 
   const nextQuote = () => {
     setQuoteIndex((prevIndex) => (prevIndex + 1) % quotes.quotes.length)
@@ -84,28 +38,6 @@ export function Footer() {
           </button>
         </div>
 
-        {/* Music Player */}
-        <div className="flex items-center space-x-4">
-          <button
-            onClick={togglePlay}
-            className="relative p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors duration-200 group"
-            aria-label={isPlaying ? 'Pause music' : 'Play music'}
-          >
-            <div className="relative">
-              <Music2
-                className={`h-6 w-6 ${isPlaying ? 'text-primary dark:text-secondary' : 'text-gray-600 dark:text-gray-400'}`}
-              />
-              {isPlaying && (
-                <div className="absolute -right-1 top-1/2 -translate-y-1/2 flex gap-[2px]">
-                  <div className="w-[2px] h-2 bg-primary dark:bg-secondary animate-music-bar1" />
-                  <div className="w-[2px] h-2 bg-primary dark:bg-secondary animate-music-bar2" />
-                  <div className="w-[2px] h-2 bg-primary dark:bg-secondary animate-music-bar3" />
-                </div>
-              )}
-            </div>
-          </button>
-        </div>
-
         {/* System Diagram */}
         <div className="flex flex-col items-center space-y-2">
           <div className="flex items-center space-x-3 text-xs">
@@ -119,9 +51,6 @@ export function Footer() {
           </div>
         </div>
       </div>
-
-      {/* Hidden YouTube Player */}
-      <div id="youtube-player" />
     </footer>
   )
 }

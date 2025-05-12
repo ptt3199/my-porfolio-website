@@ -1,0 +1,1 @@
+Create a funny not found page, and have button to go back to home page.

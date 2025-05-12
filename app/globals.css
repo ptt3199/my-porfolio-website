@@ -90,6 +90,35 @@
   }
 }
 
+/* Steam animation for coffee cup */
+@keyframes steam {
+  0% {
+    transform: translateY(0) translateX(-50%) scale(1);
+    opacity: 0;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    transform: translateY(-10px) translateX(-50%) scale(1.5);
+    opacity: 0;
+  }
+}
+
+.animate-steam {
+  animation: steam 2s ease-out infinite;
+  font-family: serif;
+  font-size: 24px;
+}
+
+.animation-delay-300 {
+  animation-delay: 300ms;
+}
+
+.animation-delay-600 {
+  animation-delay: 600ms;
+}
+
 .youtube-container {
   position: relative;
   padding-bottom: 56.25%; /* 16:9 Aspect Ratio */

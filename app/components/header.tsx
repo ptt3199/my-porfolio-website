@@ -1,21 +1,149 @@
 'use client'
 
-import { Moon, Sun } from 'lucide-react'
+import { Moon, Sun, Music2 } from 'lucide-react'
 import { useTheme } from 'next-themes'
+import { useState, useEffect } from 'react'
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
+
+const NAV_ITEMS = [
+  { href: '/', text: 'Home' },
+  { href: '/resume', text: 'Resume' },
+  { href: '/notes', text: 'Notes' },
+  { href: '/contact', text: 'Ping Me' },
+]
 
 export function Header() {
   const { theme, setTheme } = useTheme()
+  const [mounted, setMounted] = useState(false)
+  const [isPlaying, setIsPlaying] = useState(false)
+  const [player, setPlayer] = useState<YT.Player | null>(null)
+  const pathname = usePathname()
+  const isHome = pathname === '/'
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  useEffect(() => {
+    // Load YouTube IFrame API
+    const tag = document.createElement('script')
+    tag.src = 'https://www.youtube.com/iframe_api'
+    const firstScriptTag = document.getElementsByTagName('script')[0]
+    firstScriptTag.parentNode?.insertBefore(tag, firstScriptTag)
+
+    // Initialize player when API is ready
+    window.onYouTubeIframeAPIReady = () => {
+      const newPlayer = new YT.Player('youtube-player', {
+        height: '0',
+        width: '0',
+        playerVars: {
+          listType: 'playlist',
+          list: process.env.NEXT_PUBLIC_YOUTUBE_PLAYLIST_ID,
+          controls: 0,
+          showinfo: 0,
+          modestbranding: 1,
+          loop: 1,
+        },
+        events: {
+          onStateChange: event => {
+            setIsPlaying(event.data === YT.PlayerState.PLAYING)
+          },
+        },
+      })
+      setPlayer(newPlayer)
+    }
+
+    return () => {
+      player?.destroy()
+    }
+  }, [])
+
+  const togglePlay = () => {
+    if (player) {
+      if (isPlaying) {
+        player.pauseVideo()
+      } else {
+        player.playVideo()
+      }
+    }
+  }
+
+  // Prevent hydration errors by not rendering theme-dependent content until mounted
+  if (!mounted) {
+    return (
+      <header className="fixed top-0 right-0 p-4 z-50">
+        <div className="flex items-center gap-4 p-2 rounded-lg bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm">
+          {!isHome && (
+            <nav className="flex items-center gap-6 mr-4">
+              {NAV_ITEMS.map(({ href, text }) => (
+                <Link
+                  key={text}
+                  href={href}
+                  className="relative text-lg font-medium hover:text-primary dark:hover:text-secondary transition-colors duration-200 after:absolute after:left-0 after:bottom-0 after:h-[2px] after:w-0 after:bg-primary dark:after:bg-secondary after:transition-all hover:after:w-full"
+                >
+                  {text}
+                </Link>
+              ))}
+            </nav>
+          )}
+          <div className="w-10 h-10" /> {/* Placeholder for theme toggle */}
+        </div>
+      </header>
+    )
+  }
 
   return (
     <header className="fixed top-0 right-0 p-4 z-50">
-      <button
-        onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-        className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors duration-200"
-        aria-label="Toggle theme"
-      >
-        <Sun className="h-6 w-6 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-        <Moon className="absolute h-6 w-6 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-      </button>
+      <div className="flex items-center gap-4 p-2 rounded-lg bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm">
+        {!isHome && (
+          <nav className="flex items-center gap-6 mr-4">
+            {NAV_ITEMS.map(({ href, text }) => (
+              <Link
+                key={text}
+                href={href}
+                className="relative text-lg font-medium hover:text-primary dark:hover:text-secondary transition-colors duration-200 after:absolute after:left-0 after:bottom-0 after:h-[2px] after:w-0 after:bg-primary dark:after:bg-secondary after:transition-all hover:after:w-full"
+              >
+                {text}
+              </Link>
+            ))}
+          </nav>
+        )}
+        
+        <button
+          onClick={togglePlay}
+          className="relative p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors duration-200 group"
+          aria-label={isPlaying ? 'Pause music' : 'Play music'}
+        >
+          <div className="relative">
+            <Music2
+              className={`h-6 w-6 ${isPlaying ? 'text-primary dark:text-secondary' : 'text-gray-600 dark:text-gray-400'}`}
+            />
+            {isPlaying && (
+              <div className="absolute -right-1 top-1/2 -translate-y-1/2 flex gap-[2px]">
+                <div className="w-[2px] h-2 bg-primary dark:bg-secondary animate-music-bar1" />
+                <div className="w-[2px] h-2 bg-primary dark:bg-secondary animate-music-bar2" />
+                <div className="w-[2px] h-2 bg-primary dark:bg-secondary animate-music-bar3" />
+              </div>
+            )}
+          </div>
+        </button>
+
+        <button
+          onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+          className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors duration-200"
+          aria-label="Toggle theme"
+        >
+          {theme === 'dark' ? (
+            <Moon className="h-6 w-6 text-gray-600 dark:text-gray-400" />
+          ) : (
+            <Sun className="h-6 w-6 text-gray-600 dark:text-gray-400" />
+          )}
+        </button>
+      </div>
+
+      {/* Hidden YouTube Player */}
+      <div id="youtube-player" />
     </header>
   )
 }
