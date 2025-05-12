@@ -93,10 +93,6 @@ app/
 - Keep accessibility in mind
 - Test across different devices and themes
 
-## License
-
-[Your License]
-
 ## Author
 
-[Your Name]
+Phuong Tan Thanh (& my friend Cursor IDE :>)
