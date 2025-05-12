@@ -1,0 +1,84 @@
+{
+  "quotes": [
+    {
+      "text": "The best way to predict the future is to implement it.",
+      "author": "David Heinemeier Hansson"
+    },
+    {
+      "text": "Code is like humor. When you have to explain it, it's bad.",
+      "author": "Cory House"
+    },
+    {
+      "text": "Simplicity is prerequisite for reliability.",
+      "author": "Edsger W. Dijkstra"
+    },
+    {
+      "text": "Make it work, make it right, make it fast.",
+      "author": "Kent Beck"
+    },
+    {
+      "text": "The art of programming is the art of organizing complexity.",
+      "author": "Edsger W. Dijkstra"
+    },
+    {
+      "text": "Talk is cheap. Show me the code.",
+      "author": "Linus Torvalds"
+    },
+    {
+      "text": "Measuring programming progress by lines of code is like measuring aircraft building progress by weight.",
+      "author": "Bill Gates"
+    },
+    {
+      "text": "The only way to learn a new programming language is by writing programs in it.",
+      "author": "Dennis Ritchie"
+    },
+    {
+      "text": "The most important property of a program is whether it accomplishes the intention of its user.",
+      "author": "C.A.R. Hoare"
+    },
+    {
+      "text": "The best code is no code at all.",
+      "author": "Jeff Atwood"
+    },
+    {
+      "text": "Always code as if the guy who ends up maintaining your code will be a violent psychopath who knows where you live.",
+      "author": "John Woods"
+    },
+    {
+      "text": "The problem with software is that you can make it so perfect that it becomes useless.",
+      "author": "Larry Niven"
+    },
+    {
+      "text": "Clean code always looks like it was written by someone who cares.",
+      "author": "Robert C. Martin"
+    },
+    {
+      "text": "Debugging is twice as hard as writing the code in the first place. Therefore, if you write the code as cleverly as possible, you are, by definition, not smart enough to debug it.",
+      "author": "Brian W. Kernighan"
+    },
+    {
+      "text": "Walking on water and developing software from a specification are easy if both are frozen.",
+      "author": "Edward V. Berard"
+    },
+    {
+      "text": "The only way to do great work is to love what you do. If you haven't found it yet, keep looking. Don't settle. As with all matters of the heart, you'll know when you find it. (Applies to finding your coding passion too!)",
+      "author": "Steve Jobs"
+    },
+    {
+      "text": "It is not enough for code to work.",
+      "author": "Robert C. Martin"
+    },
+    {
+      "text": "The computer revolution hasn't started yet. Don't be afraid to be late. You can still be a pioneer.",
+      "author": "Alan Kay"
+    },
+    {
+      "text": "Any sufficiently advanced technology is indistinguishable from magic, but for a developer, it's usually indistinguishable from a well-documented API.",
+      "author": "Arthur C. Clarke (adapted)"
+    },
+    {
+      "text": "A good API is like a joke. If you have to explain it, it's bad.",
+      "author": "Marty Cagan (adapted from Cory House)"
+    }
+  ]
+}
