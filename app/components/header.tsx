@@ -5,6 +5,7 @@ import { useTheme } from 'next-themes'
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { useMusicPlayer } from '../contexts/music-context'
 
 const NAV_ITEMS = [
   { href: '/', text: 'Home' },
@@ -16,58 +17,13 @@ const NAV_ITEMS = [
 export function Header() {
   const { theme, setTheme } = useTheme()
   const [mounted, setMounted] = useState(false)
-  const [isPlaying, setIsPlaying] = useState(false)
-  const [player, setPlayer] = useState<YT.Player | null>(null)
+  const { isPlaying, togglePlay } = useMusicPlayer()
   const pathname = usePathname()
   const isHome = pathname === '/'
 
   useEffect(() => {
     setMounted(true)
   }, [])
-
-  useEffect(() => {
-    // Load YouTube IFrame API
-    const tag = document.createElement('script')
-    tag.src = 'https://www.youtube.com/iframe_api'
-    const firstScriptTag = document.getElementsByTagName('script')[0]
-    firstScriptTag.parentNode?.insertBefore(tag, firstScriptTag)
-
-    // Initialize player when API is ready
-    window.onYouTubeIframeAPIReady = () => {
-      const newPlayer = new YT.Player('youtube-player', {
-        height: '0',
-        width: '0',
-        playerVars: {
-          listType: 'playlist',
-          list: process.env.NEXT_PUBLIC_YOUTUBE_PLAYLIST_ID,
-          controls: 0,
-          showinfo: 0,
-          modestbranding: 1,
-          loop: 1,
-        },
-        events: {
-          onStateChange: event => {
-            setIsPlaying(event.data === YT.PlayerState.PLAYING)
-          },
-        },
-      })
-      setPlayer(newPlayer)
-    }
-
-    return () => {
-      player?.destroy()
-    }
-  }, [])
-
-  const togglePlay = () => {
-    if (player) {
-      if (isPlaying) {
-        player.pauseVideo()
-      } else {
-        player.playVideo()
-      }
-    }
-  }
 
   // Prevent hydration errors by not rendering theme-dependent content until mounted
   if (!mounted) {
@@ -141,9 +97,6 @@ export function Header() {
           )}
         </button>
       </div>
-
-      {/* Hidden YouTube Player */}
-      <div id="youtube-player" />
     </header>
   )
 }

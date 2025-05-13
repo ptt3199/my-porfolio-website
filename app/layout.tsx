@@ -1,6 +1,7 @@
 import './globals.css'
 import { Space_Grotesk } from 'next/font/google'
 import { ThemeProvider } from './components/theme-provider'
+import { MusicProvider } from './contexts/music-context'
 
 const spaceGrotesk = Space_Grotesk({
   subsets: ['latin'],
@@ -22,7 +23,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           enableSystem
           disableTransitionOnChange
         >
-          {children}
+          <MusicProvider>
+            {children}
+          </MusicProvider>
         </ThemeProvider>
       </body>
     </html>
