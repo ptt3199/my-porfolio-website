@@ -33,7 +33,7 @@ graph TD
     NotFound --> AnimatedElements[Animations]
     NotFound --> ErrorMessage[404 Message]
     NotFound --> HomeButton[Return Home]
-
+    
     Footer --> QuoteSystem[Quote System]
     Footer --> SystemDiagram[System Diagram]
 ```

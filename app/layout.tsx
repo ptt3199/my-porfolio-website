@@ -24,7 +24,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           disableTransitionOnChange
         >
           <MusicProvider>
-            {children}
+          {children}
           </MusicProvider>
         </ThemeProvider>
       </body>

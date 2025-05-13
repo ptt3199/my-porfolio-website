@@ -85,17 +85,17 @@ export function Header() {
           </div>
         </button>
 
-        <button
-          onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-          className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors duration-200"
-          aria-label="Toggle theme"
-        >
+      <button
+        onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+        className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors duration-200"
+        aria-label="Toggle theme"
+      >
           {theme === 'dark' ? (
             <Moon className="h-6 w-6 text-gray-600 dark:text-gray-400" />
           ) : (
             <Sun className="h-6 w-6 text-gray-600 dark:text-gray-400" />
           )}
-        </button>
+      </button>
       </div>
     </header>
   )
