@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": "/projects/qrcode-generator/:path*",
+      "destination": "https://bank-qrcode-generator-phi.vercel.app/:path*"
+    }
+  ]
+} 
