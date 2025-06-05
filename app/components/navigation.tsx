@@ -2,6 +2,7 @@ import Link from 'next/link'
 
 const NAV_ITEMS = [
   { href: '/resume', text: 'Resume' },
+  { href: '/projects', text: 'Projects' },
   { href: '/notes', text: 'Notes' },
   { href: '/contact', text: 'Ping Me' },
 ]

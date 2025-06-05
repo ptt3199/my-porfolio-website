@@ -24,10 +24,10 @@ export function ProjectLayout({ src, title, description }: ProjectLayoutProps) {
               )}
             </div>
             <a 
-              href="/"
+              href="/projects"
               className="text-blue-600 dark:text-blue-400 hover:underline"
             >
-              ← Back to Home
+              ← Back to Projects
             </a>
           </div>
         </div>

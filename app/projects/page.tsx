@@ -1,25 +1,20 @@
 'use client'
 
 import Link from 'next/link'
+import { Header } from '../components/header'
 import { projectApps } from '../data/projects'
 
 export default function ProjectsPage() {
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100">
-      <div className="container mx-auto px-4 py-16">
-        {/* Header */}
-        <div className="mb-12">
-          <div className="flex items-center justify-between mb-6">
-            <h1 className="text-4xl font-bold">Projects</h1>
-            <Link 
-              href="/"
-              className="text-blue-600 dark:text-blue-400 hover:underline"
-            >
-              ← Back to Home
-            </Link>
-          </div>
-          <p className="text-xl text-gray-600 dark:text-gray-400">
-            Collection of useful web applications and tools
+      <Header />
+      
+      <main className="container mx-auto px-4 py-24">
+        {/* Title Section */}
+        <div className="mb-12 text-center">
+          <h1 className="text-4xl font-bold tracking-tight mb-4">Projects</h1>
+          <p className="text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+            Collection of useful web applications and tools that I've built to solve real-world problems
           </p>
         </div>
 
@@ -64,7 +59,7 @@ export default function ProjectsPage() {
             </p>
           </div>
         )}
-      </div>
+      </main>
     </div>
   )
 } 
