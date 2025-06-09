@@ -2,6 +2,87 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Highlight.js styling for code blocks */
+@import 'highlight.js/styles/github-dark.css';
+
+/* Custom styles for markdown content */
+.prose {
+  color: inherit;
+}
+
+.prose h1,
+.prose h2,
+.prose h3,
+.prose h4,
+.prose h5,
+.prose h6 {
+  color: inherit;
+}
+
+.prose strong {
+  color: inherit;
+}
+
+.prose code {
+  color: rgb(37 99 235); /* blue-600 */
+  background-color: rgb(243 244 246); /* gray-100 */
+  padding: 0.125rem 0.25rem;
+  border-radius: 0.25rem;
+  font-size: 0.875em;
+}
+
+.dark .prose code {
+  color: rgb(96 165 250); /* blue-400 */
+  background-color: rgb(31 41 55); /* gray-800 */
+}
+
+.prose pre {
+  background-color: rgb(17 24 39) !important; /* gray-900 */
+  color: rgb(243 244 246) !important; /* gray-100 */
+}
+
+.prose pre code {
+  background-color: transparent;
+  color: inherit;
+  padding: 0;
+  border-radius: 0;
+  font-size: inherit;
+}
+
+.prose blockquote {
+  border-left-color: rgb(59 130 246); /* blue-500 */
+  color: inherit;
+}
+
+.prose a {
+  color: rgb(37 99 235); /* blue-600 */
+  text-decoration: underline;
+  text-decoration-color: rgb(191 219 254); /* blue-200 */
+}
+
+.dark .prose a {
+  color: rgb(96 165 250); /* blue-400 */
+  text-decoration-color: rgb(30 58 138); /* blue-800 */
+}
+
+.prose a:hover {
+  text-decoration-color: currentColor;
+}
+
+/* Ensure tables are responsive */
+.prose table {
+  overflow-x: auto;
+  display: block;
+  white-space: nowrap;
+}
+
+@media (min-width: 768px) {
+  .prose table {
+    display: table;
+    white-space: normal;
+  }
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;

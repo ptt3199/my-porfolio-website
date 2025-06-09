@@ -10,6 +10,7 @@ import { useMusicPlayer } from '../contexts/music-context'
 const NAV_ITEMS = [
   { href: '/', text: 'Home' },
   { href: '/resume', text: 'Resume' },
+  { href: '/projects', text: 'Projects' },
   { href: '/notes', text: 'Notes' },
   { href: '/contact', text: 'Ping Me' },
 ]
