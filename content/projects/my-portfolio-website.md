@@ -1,7 +1,7 @@
 ---
 name: "Personal Portfolio Website"
 description: "A modern, responsive portfolio website built with Next.js and TypeScript, featuring dynamic content management, AI-powered development tools integration, and a clean, accessible design with markdown-based CMS."
-link: "https://github.com/your-username/my-website"
+link: "https://phuongtanthanh.vercel.app"
 status: "active"
 featured: true
 startDate: "2024-01-01"
