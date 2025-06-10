@@ -4,7 +4,7 @@ import { Header } from '../components/header'
 import { Avatar } from '../components/avatar'
 import { SocialIcons } from '../components/social-icons'
 import { Download, ExternalLink } from 'lucide-react'
-import resumeData from '../data/resume.json'
+// API-based loading instead of direct import
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 
@@ -23,57 +23,12 @@ interface ProjectMeta {
 }
 
 interface ResumeData {
-  title: {
-    name: string
-    tagline: string
-    avatar: string
-  }
+  name: string
+  tagline: string
+  avatar: string
   about: string
-  experience: {
-    position: string
-    company: string
-    location: string
-    period: string
-    description: string
-    responsibilities: string[]
-    skills: string[]
-  }[]
-  education: {
-    school: string
-    major: string
-    degree?: string
-    period: string
-    description?: {
-      name: string
-      links: {
-        name: string
-        url: string
-      }[]
-      achievements: string[]
-    }[]
-    skills: string[]
-  }[]
-
-  skills: Record<string, string[]>
-  certifications: {
-    name: string
-    issuer: string
-    date: string
-    achievements?: string[]
-  }[]
-  languages?: {
-    language: string
-    proficiency: string
-  }[]
-  volunteering?: {
-    position: string
-    organization: string
-    period: string
-    responsibilities: string[]
-  }[]
+  rawContent: string
 }
-
-const typedResumeData = resumeData as ResumeData
 
 function SkillTag({ skill }: { skill: string }) {
   return (
@@ -92,24 +47,218 @@ function Section({ title, children }: { title: string; children: React.ReactNode
   )
 }
 
+// Parse markdown content into structured data
+function parseResumeContent(content: string) {
+  const sections = content.split(/^## /m).filter(Boolean)
+  const result: any = {
+    experience: [],
+    education: [],
+    projects: [],
+    skills: {},
+    certifications: [],
+    languages: [],
+    volunteering: []
+  }
+
+  sections.forEach(section => {
+    const lines = section.split('\n').filter(line => line.trim())
+    const sectionTitle = lines[0].replace('#', '').trim().toLowerCase()
+
+    if (sectionTitle === 'experience') {
+      const experiences = section.split(/^### /m).filter(Boolean).slice(1)
+      result.experience = experiences.map(exp => {
+        const expLines = exp.split('\n').filter(line => line.trim())
+        const title = expLines[0]
+        const companyLine = expLines[1]?.match(/\*\*(.*?)\*\* • (.*?) • \*(.*?)\*/)
+        
+        const responsibilities: string[] = []
+        const technologies: string[] = []
+        let description = ''
+        
+        let currentSection = ''
+        expLines.forEach(line => {
+          if (line.includes('**Key Responsibilities:**')) currentSection = 'responsibilities'
+          else if (line.includes('**Technologies:**')) currentSection = 'technologies'
+          else if (line.startsWith('- ') && currentSection === 'responsibilities') {
+            responsibilities.push(line.substring(2))
+          } else if (currentSection === 'technologies' && !line.includes('**')) {
+            technologies.push(...line.split(',').map(t => t.trim()))
+          } else if (!line.includes('**') && !line.startsWith('- ') && !line.includes('•') && line.length > 10 && !currentSection) {
+            description = line
+          }
+        })
+
+        return {
+          position: title,
+          company: companyLine?.[1] || '',
+          location: companyLine?.[2] || '',
+          period: companyLine?.[3] || '',
+          description,
+          responsibilities,
+          skills: technologies
+        }
+      })
+    }
+    
+    if (sectionTitle === 'education') {
+      const educations = section.split(/^### /m).filter(Boolean).slice(1)
+      result.education = educations.map(edu => {
+        const eduLines = edu.split('\n').filter(line => line.trim())
+        const school = eduLines[0]
+        const degreeLine = eduLines[1]?.match(/\*\*(.*?)\*\* • \*(.*?)\*/)
+        
+        const achievements: string[] = []
+        const technologies: string[] = []
+        
+        eduLines.forEach(line => {
+          if (line.startsWith('- ')) {
+            achievements.push(line.substring(2))
+          } else if (line.includes('**Technologies:**')) {
+            const techLine = eduLines[eduLines.indexOf(line) + 1]
+            if (techLine) {
+              technologies.push(...techLine.split(',').map(t => t.trim()))
+            }
+          }
+        })
+
+        const links: any[] = []
+        eduLines.forEach(line => {
+          if (line.includes('[') && line.includes('](')) {
+            const linkMatches = line.matchAll(/\[([^\]]+)\]\(([^)]+)\)/g)
+            for (const match of linkMatches) {
+              links.push({ name: match[1], url: match[2] })
+            }
+          }
+        })
+
+        return {
+          school,
+          major: degreeLine?.[1]?.replace('Bachelor of Engineering in ', '') || '',
+          degree: degreeLine?.[1]?.includes('Bachelor') ? 'Bachelor of Engineering' : '',
+          period: degreeLine?.[2] || '',
+          description: links.length > 0 ? [{ 
+            name: 'Graduation Thesis', 
+            links, 
+            achievements 
+          }] : [{ name: 'Achievements', achievements }],
+          skills: technologies
+        }
+      })
+    }
+
+    if (sectionTitle === 'skills') {
+      const skillLines = section.split('\n').filter(line => line.includes('**') && line.includes(':'))
+      skillLines.forEach(line => {
+        const match = line.match(/\*\*(.*?)\*\*:\s*(.*)/)
+        if (match) {
+          result.skills[match[1]] = match[2].split(',').map((s: string) => s.trim())
+        }
+      })
+    }
+
+    if (sectionTitle === 'certifications') {
+      const certs = section.split(/^### /m).filter(Boolean).slice(1)
+      result.certifications = certs.map(cert => {
+        const certLines = cert.split('\n').filter(line => line.trim())
+        const name = certLines[0]
+        const issuerLine = certLines[1]?.match(/\*\*(.*?)\*\* • \*(.*?)\*/)
+        
+        const achievements: string[] = []
+        certLines.forEach(line => {
+          if (line.startsWith('- ')) {
+            achievements.push(line.substring(2))
+          }
+        })
+
+        return {
+          name,
+          issuer: issuerLine?.[1] || '',
+          date: issuerLine?.[2] || '',
+          achievements: achievements.length > 0 ? achievements : undefined
+        }
+      })
+    }
+
+    if (sectionTitle === 'languages') {
+      const langLines = section.split('\n').filter(line => line.includes('**') && line.includes(':'))
+      result.languages = langLines.map(line => {
+        const match = line.match(/\*\*(.*?)\*\*:\s*(.*)/)
+        if (match) {
+          return {
+            language: match[1],
+            proficiency: match[2]
+          }
+        }
+        return null
+      }).filter(Boolean)
+    }
+
+    if (sectionTitle === 'volunteering') {
+      const volunteers = section.split(/^### /m).filter(Boolean).slice(1)
+      result.volunteering = volunteers.map(vol => {
+        const volLines = vol.split('\n').filter(line => line.trim())
+        const position = volLines[0]
+        const orgLine = volLines[1]?.match(/\*\*(.*?)\*\* • \*(.*?)\*/)
+        
+        const responsibilities: string[] = []
+        volLines.forEach(line => {
+          if (line.startsWith('- ')) {
+            responsibilities.push(line.substring(2))
+          }
+        })
+
+        return {
+          position,
+          organization: orgLine?.[1] || '',
+          period: orgLine?.[2] || '',
+          responsibilities
+        }
+      })
+    }
+  })
+
+  return result
+}
+
 export default function Resume() {
+  const [resumeData, setResumeData] = useState<ResumeData | null>(null)
+  const [parsedContent, setParsedContent] = useState<any>(null)
   const [projects, setProjects] = useState<ProjectMeta[]>([])
   const [projectsLoading, setProjectsLoading] = useState(true)
 
-  // Load projects on component mount
+  // Load resume data
+  useEffect(() => {
+    async function loadResume() {
+      try {
+        const response = await fetch('/api/resume')
+        if (response.ok) {
+          const data = await response.json()
+          console.log('Resume data loaded:', data)
+          setResumeData(data)
+          const parsed = parseResumeContent(data.rawContent)
+          console.log('Parsed resume content:', parsed)
+          setParsedContent(parsed)
+        }
+      } catch (error) {
+        console.error('Error loading resume:', error)
+      }
+    }
+    
+    loadResume()
+  }, [])
+
+  // Load projects
   useEffect(() => {
     async function loadProjects() {
       try {
         const response = await fetch('/api/projects')
         if (response.ok) {
           const data = await response.json()
-          // Get featured projects or latest 4 projects
           const featuredProjects = data.projects.filter((p: ProjectMeta) => p.featured)
           setProjects(featuredProjects.length > 0 ? featuredProjects.slice(0, 4) : data.projects.slice(0, 4))
         }
       } catch (error) {
         console.error('Error loading projects:', error)
-        // Fallback to empty array - will show empty state
         setProjects([])
       } finally {
         setProjectsLoading(false)
@@ -119,6 +268,20 @@ export default function Resume() {
     loadProjects()
   }, [])
 
+  if (!resumeData || !parsedContent) {
+    return (
+      <div className="min-h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100">
+        <Header />
+        <main className="container mx-auto px-4 py-24">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
+            <p className="mt-4 text-gray-600 dark:text-gray-400">Loading resume...</p>
+          </div>
+        </main>
+      </div>
+    )
+  }
+
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100">
       <Header />
@@ -126,10 +289,10 @@ export default function Resume() {
       <main className="container mx-auto px-4 py-24 space-y-12">
         {/* Title Section */}
         <div className="flex flex-col items-center space-y-6 text-center">
-          <Avatar src={typedResumeData.title.avatar} />
+          <Avatar src={resumeData.avatar} />
           <div>
-            <h1 className="text-4xl font-bold tracking-tight">{typedResumeData.title.name}</h1>
-            <p className="text-xl text-primary dark:text-secondary mt-2">{typedResumeData.title.tagline}</p>
+            <h1 className="text-4xl font-bold tracking-tight">{resumeData.name}</h1>
+            <p className="text-xl text-primary dark:text-secondary mt-2">{resumeData.tagline}</p>
           </div>
           <div className="flex items-center gap-6">
             <SocialIcons />
@@ -147,112 +310,116 @@ export default function Resume() {
         {/* About Section */}
         <Section title="About">
           <p className="text-lg text-gray-600 dark:text-gray-400 leading-relaxed">
-            {typedResumeData.about}
+            {resumeData.about}
           </p>
         </Section>
 
         {/* Experience Section */}
-        <Section title="Experience">
-          {typedResumeData.experience.map((exp, index) => (
-            <div key={index} className="border border-border rounded-lg p-6 space-y-4">
-              <div className="flex justify-between items-start">
-                <div>
-                  <h3 className="text-xl font-semibold">{exp.position}</h3>
-                  <p className="text-primary dark:text-secondary">{exp.company}</p>
-                  <p className="text-gray-500">{exp.location}</p>
-                </div>
-                <p className="text-sm text-gray-500">{exp.period}</p>
-              </div>
-              
-              {exp.description && (
-                <div className="space-y-2">
-                  <h4 className="font-semibold text-primary dark:text-secondary">Overview</h4>
-                  <p className="text-gray-600 dark:text-gray-400">{exp.description}</p>
-                </div>
-              )}
-
-              {exp.responsibilities && exp.responsibilities.length > 0 && (
-                <div className="space-y-2">
-                  <h4 className="font-semibold text-primary dark:text-secondary">Key Responsibilities</h4>
-                  <ul className="list-disc list-inside space-y-1 text-gray-600 dark:text-gray-400">
-                    {exp.responsibilities.map((resp, i) => (
-                      <li key={i}>{resp}</li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-
-              {exp.skills && exp.skills.length > 0 && (
-                <div className="space-y-2">
-                  <h4 className="font-semibold text-primary dark:text-secondary">Technologies Used</h4>
-                  <div className="flex flex-wrap gap-2">
-                    {exp.skills.map((skill, i) => (
-                      <SkillTag key={i} skill={skill} />
-                    ))}
+        {parsedContent.experience.length > 0 && (
+          <Section title="Experience">
+            {parsedContent.experience.map((exp: any, index: number) => (
+              <div key={index} className="border border-border rounded-lg p-6 space-y-4">
+                <div className="flex justify-between items-start">
+                  <div>
+                    <h3 className="text-xl font-semibold">{exp.position}</h3>
+                    <p className="text-primary dark:text-secondary">{exp.company}</p>
+                    <p className="text-gray-500">{exp.location}</p>
                   </div>
+                  <p className="text-sm text-gray-500">{exp.period}</p>
                 </div>
-              )}
-            </div>
-          ))}
-        </Section>
+                
+                {exp.description && (
+                  <div className="space-y-2">
+                    <h4 className="font-semibold text-primary dark:text-secondary">Overview</h4>
+                    <p className="text-gray-600 dark:text-gray-400">{exp.description}</p>
+                  </div>
+                )}
 
-        {/* Education Section */}
-        <Section title="Education">
-          {typedResumeData.education.map((edu, index) => (
-            <div key={index} className="border border-border rounded-lg p-6 space-y-4">
-              <div className="flex justify-between items-start">
-                <div>
-                  <h3 className="text-xl font-semibold">{edu.school}</h3>
-                  <p className="text-primary dark:text-secondary">
-                    {edu.degree} {edu.degree && 'in'} {edu.major}
-                  </p>
-                </div>
-                <p className="text-sm text-gray-500">{edu.period}</p>
-              </div>
-              
-              {edu.description && edu.description.map((desc, i) => (
-                <div key={i} className="space-y-2">
-                  <h4 className="font-semibold text-primary dark:text-secondary">{desc.name}</h4>
-                  
-                  {desc.links && desc.links.length > 0 && (
-                    <div className="flex gap-4">
-                      {desc.links.map((link, j) => (
-                        <a
-                          key={j}
-                          href={link.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-accent hover:text-accent-dark transition-colors duration-200"
-                        >
-                          {link.name}
-                        </a>
-                      ))}
-                    </div>
-                  )}
-
-                  {desc.achievements && desc.achievements.length > 0 && (
+                {exp.responsibilities && exp.responsibilities.length > 0 && (
+                  <div className="space-y-2">
+                    <h4 className="font-semibold text-primary dark:text-secondary">Key Responsibilities</h4>
                     <ul className="list-disc list-inside space-y-1 text-gray-600 dark:text-gray-400">
-                      {desc.achievements.map((achievement, k) => (
-                        <li key={k}>{achievement}</li>
+                      {exp.responsibilities.map((resp: string, i: number) => (
+                        <li key={i}>{resp}</li>
                       ))}
                     </ul>
-                  )}
-                </div>
-              ))}
-
-              {edu.skills && edu.skills.length > 0 && (
-                <div className="space-y-2">
-                  <h4 className="font-semibold text-primary dark:text-secondary">Key Skills</h4>
-                  <div className="flex flex-wrap gap-2">
-                    {edu.skills.map((skill, i) => (
-                      <SkillTag key={i} skill={skill} />
-                    ))}
                   </div>
+                )}
+
+                {exp.skills && exp.skills.length > 0 && (
+                  <div className="space-y-2">
+                    <h4 className="font-semibold text-primary dark:text-secondary">Technologies Used</h4>
+                    <div className="flex flex-wrap gap-2">
+                      {exp.skills.map((skill: string, i: number) => (
+                        <SkillTag key={i} skill={skill} />
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            ))}
+          </Section>
+        )}
+
+        {/* Education Section */}
+        {parsedContent.education.length > 0 && (
+          <Section title="Education">
+            {parsedContent.education.map((edu: any, index: number) => (
+              <div key={index} className="border border-border rounded-lg p-6 space-y-4">
+                <div className="flex justify-between items-start">
+                  <div>
+                    <h3 className="text-xl font-semibold">{edu.school}</h3>
+                    <p className="text-primary dark:text-secondary">
+                      {edu.degree} {edu.degree && 'in'} {edu.major}
+                    </p>
+                  </div>
+                  <p className="text-sm text-gray-500">{edu.period}</p>
                 </div>
-              )}
-            </div>
-          ))}
-        </Section>
+                
+                {edu.description && edu.description.map((desc: any, i: number) => (
+                  <div key={i} className="space-y-2">
+                    <h4 className="font-semibold text-primary dark:text-secondary">{desc.name}</h4>
+                    
+                    {desc.links && desc.links.length > 0 && (
+                      <div className="flex gap-4">
+                        {desc.links.map((link: any, j: number) => (
+                          <a
+                            key={j}
+                            href={link.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-accent hover:text-accent-dark transition-colors duration-200"
+                          >
+                            {link.name}
+                          </a>
+                        ))}
+                      </div>
+                    )}
+
+                    {desc.achievements && desc.achievements.length > 0 && (
+                      <ul className="list-disc list-inside space-y-1 text-gray-600 dark:text-gray-400">
+                        {desc.achievements.map((achievement: string, k: number) => (
+                          <li key={k}>{achievement}</li>
+                        ))}
+                      </ul>
+                    )}
+                  </div>
+                ))}
+
+                {edu.skills && edu.skills.length > 0 && (
+                  <div className="space-y-2">
+                    <h4 className="font-semibold text-primary dark:text-secondary">Key Skills</h4>
+                    <div className="flex flex-wrap gap-2">
+                      {edu.skills.map((skill: string, i: number) => (
+                        <SkillTag key={i} skill={skill} />
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            ))}
+          </Section>
+        )}
 
         {/* Projects Section */}
         <Section title="Featured Projects">
@@ -374,46 +541,92 @@ export default function Resume() {
         </Section>
 
         {/* Skills Section */}
-        <Section title="Skills">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {Object.entries(typedResumeData.skills).map(([category, skills]) => (
-              <div key={category} className="border border-border rounded-lg p-6 space-y-4">
-                <h3 className="text-lg font-semibold">{category}</h3>
-                <div className="flex flex-wrap gap-2">
-                  {skills.map((skill, i) => (
-                    <SkillTag key={i} skill={skill} />
-                  ))}
+        {Object.keys(parsedContent.skills).length > 0 && (
+          <Section title="Skills">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {Object.entries(parsedContent.skills).map(([category, skills]: [string, any]) => (
+                <div key={category} className="border border-border rounded-lg p-6 space-y-4">
+                  <h3 className="text-lg font-semibold">{category}</h3>
+                  <div className="flex flex-wrap gap-2">
+                    {skills.map((skill: string, i: number) => (
+                      <SkillTag key={i} skill={skill} />
+                    ))}
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
-        </Section>
+              ))}
+            </div>
+          </Section>
+        )}
 
         {/* Certifications Section */}
-        <Section title="Certifications">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {typedResumeData.certifications.map((cert, index) => (
+        {parsedContent.certifications.length > 0 && (
+          <Section title="Certifications">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {parsedContent.certifications.map((cert: any, index: number) => (
+                <div key={index} className="border border-border rounded-lg p-6 space-y-4">
+                  <div>
+                    <h3 className="text-lg font-semibold">{cert.name}</h3>
+                    <p className="text-primary dark:text-secondary">{cert.issuer}</p>
+                    <p className="text-sm text-gray-500">{cert.date}</p>
+                  </div>
+
+                  {cert.achievements && cert.achievements.length > 0 && (
+                    <div className="space-y-2">
+                      <h4 className="font-semibold text-primary dark:text-secondary">Achievements</h4>
+                      <ul className="list-disc list-inside space-y-1 text-gray-600 dark:text-gray-400">
+                        {cert.achievements.map((achievement: string, i: number) => (
+                          <li key={i}>{achievement}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </Section>
+        )}
+
+        {/* Languages Section */}
+        {parsedContent.languages && parsedContent.languages.length > 0 && (
+          <Section title="Languages">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {parsedContent.languages.map((lang: any, index: number) => (
+                <div key={index} className="border border-border rounded-lg p-6">
+                  <h3 className="text-lg font-semibold">{lang.language}</h3>
+                  <p className="text-gray-600 dark:text-gray-400">{lang.proficiency}</p>
+                </div>
+              ))}
+            </div>
+          </Section>
+        )}
+
+        {/* Volunteering Section */}
+        {parsedContent.volunteering && parsedContent.volunteering.length > 0 && (
+          <Section title="Volunteering">
+            {parsedContent.volunteering.map((vol: any, index: number) => (
               <div key={index} className="border border-border rounded-lg p-6 space-y-4">
-                <div>
-                  <h3 className="text-lg font-semibold">{cert.name}</h3>
-                  <p className="text-primary dark:text-secondary">{cert.issuer}</p>
-                  <p className="text-sm text-gray-500">{cert.date}</p>
+                <div className="flex justify-between items-start">
+                  <div>
+                    <h3 className="text-xl font-semibold">{vol.position}</h3>
+                    <p className="text-primary dark:text-secondary">{vol.organization}</p>
+                  </div>
+                  <p className="text-sm text-gray-500">{vol.period}</p>
                 </div>
 
-                {cert.achievements && cert.achievements.length > 0 && (
+                {vol.responsibilities && vol.responsibilities.length > 0 && (
                   <div className="space-y-2">
-                    <h4 className="font-semibold text-primary dark:text-secondary">Achievements</h4>
+                    <h4 className="font-semibold text-primary dark:text-secondary">Responsibilities</h4>
                     <ul className="list-disc list-inside space-y-1 text-gray-600 dark:text-gray-400">
-                      {cert.achievements.map((achievement, i) => (
-                        <li key={i}>{achievement}</li>
+                      {vol.responsibilities.map((resp: string, i: number) => (
+                        <li key={i}>{resp}</li>
                       ))}
                     </ul>
                   </div>
                 )}
               </div>
             ))}
-          </div>
-        </Section>
+          </Section>
+        )}
       </main>
     </div>
   )

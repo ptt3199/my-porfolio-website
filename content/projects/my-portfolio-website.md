@@ -1,10 +1,10 @@
 ---
 name: "Personal Portfolio Website"
-description: "A modern, responsive portfolio website built with Next.js and TypeScript, featuring dynamic content management, AI-powered development tools integration, and a clean, accessible design with markdown-based CMS."
+description: " (This website) A modern, responsive portfolio website built with Next.js and TypeScript, featuring dynamic content management, AI-powered development tools integration, and a clean, accessible design with markdown-based CMS."
 link: "https://phuongtanthanh.vercel.app"
 status: "active"
 featured: true
-startDate: "2024-01-01"
+startDate: "2025-05-12"
 endDate: "ongoing"
 technologies: ["Next.js", "TypeScript", "Tailwind CSS", "Vercel", "Markdown", "React", "Resend", "Stagewise"]
 category: "web-development"
@@ -50,3 +50,8 @@ The website is built using Next.js 14 with TypeScript, leveraging the latest Rea
 - **Accessibility**: WCAG compliant with keyboard navigation and screen reader support
 - **Mobile Responsive**: Seamless experience across all device sizes
 - **Modern UI**: Clean design with smooth animations and transitions 
+
+## Links
+
+- **Live Application**: [phuongtanthanh.vercel.app](https://phuongtanthanh.vercel.app)
+- **Source Code**: [GitHub Repository](https://github.com/ptt3199/my-website)

@@ -4,8 +4,8 @@ description: "A modern React application for generating real, scannable QR codes
 link: "https://bank-qrcode-generator-phi.vercel.app"
 status: "completed"
 featured: true
-startDate: "2024-01-01"
-endDate: "2024-03-15"
+startDate: "2025-06-03"
+endDate: "2025-06-04"
 technologies: ["React", "Vite", "Tailwind CSS", "Go", "Vercel", "JavaScript", "QR Code", "VietQR"]
 category: "fintech"
 highlights:
