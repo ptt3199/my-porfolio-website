@@ -1,253 +1,78 @@
 ---
-title: "Cursor hangs up after running command | A workaround"
-description: "A comprehensive workaround for preventing Cursor from hanging up after running terminal commands, specifically for users with ZSH and Powerlevel10k theme"
+title: "Fix Cursor Terminal Hanging with ZSH/Powerlevel10k"
+description: "Smart on-demand fix for Cursor hanging with ZSH and Powerlevel10k - keep your theme everywhere!"
 publishedAt: "2025-06-10"
-tags: ["cursor", "vscode", "terminal", "zsh", "powerlevel10k", "troubleshooting"]
+tags: ["cursor", "terminal", "zsh", "powerlevel10k", "fix"]
 category: "IDE"
-readTime: 8
+readTime: 2
 ---
 
-# Cursor Hangs Up After Running Commands: A Complete Workaround
+# Fix Cursor Terminal Hanging with ZSH/Powerlevel10k
 
-If you're using Cursor (the AI-powered code editor) and experiencing frustrating hangs where the terminal gets stuck in a "generating..." state after running commands, you're not alone. This issue is particularly common among developers using ZSH with custom themes like Powerlevel10k.
+If Cursor hangs after running terminal commands and you're using ZSH with Powerlevel10k, here's a smart fix that keeps your beautiful theme everywhere.
 
-## 🚨 The Problem
+## The Problem
 
-When using Cursor's terminal, you might notice:
+Cursor gets stuck in "generating..." state after terminal commands because it can't parse complex shell prompts from themes like Powerlevel10k.
 
-- ⏳ Commands execute but Cursor remains in "generating..." state indefinitely
-- 🔄 The interface becomes unresponsive after terminal operations
-- 🖱️ You need to manually click "Move to Background" to regain control
-- 📱 The AI assistant stops responding until you intervene
+## Our Better Solution
 
-This significantly disrupts the development workflow and makes Cursor's AI features less effective.
+**Our approach is smarter than other workarounds** - keep your beautiful theme everywhere by default, and only use a simple prompt when hanging actually occurs.
 
-![Cursor hangs up after running command](/notes/cursor-hangs-up-after-running-command.png)
+### Why This Approach is Better:
+- ✅ Keep Powerlevel10k theme everywhere (including Cursor terminal)
+- ✅ Only switch to simple mode when actually needed
+- ✅ Manual control - you decide when to use the workaround
+- ✅ No workflow disruption
 
-## 🔍 Root Cause Analysis
+### Fix Steps
 
-Based on community discussions in [Cursor's GitHub repository](https://forum.cursor.com/t/cursor-agent-mode-when-running-terminal-commands-often-hangs-up-the-terminal-requiring-a-click-to-pop-it-out-in-order-to-continue-commands/59969/16), the issue stems from **Cursor's inability to properly parse complex shell prompts**.
-
-### Why This Happens:
-
-- **Complex Themes**: Powerlevel10k and similar themes use Unicode characters, colors, and complex formatting
-- **Prompt Detection**: Cursor struggles to identify when a command has finished executing
-- **Terminal Parsing**: The AI can't distinguish between the prompt and command output
-- **VSCode Base**: Since Cursor is built on VSCode, it inherits some terminal parsing limitations
-
-## ✅ The Solution: Conditional Theme Loading
-
-The most effective workaround is to **disable complex themes specifically for Cursor** while keeping them for your regular terminal usage.
-
-### Step 1: Backup Your Configuration
-
-Before making changes, backup your current ZSH configuration:
-
+1. **Backup your config:**
 ```bash
 cp ~/.zshrc ~/.zshrc.backup
 ```
 
-### Step 2: Modify Your ~/.zshrc
-
-Open your ZSH configuration file:
+2. **Add these aliases to ~/.zshrc:**
 
 ```bash
-nano ~/.zshrc
-# or
-code ~/.zshrc
+# Simple prompt aliases for Cursor compatibility (if needed)
+alias simple-prompt='export PS1="➜ %1~ %# "; export PROMPT="➜ %1~ %# "; export RPS1=""; export RPROMPT=""'
+alias restore-prompt='source ~/.p10k.zsh 2>/dev/null'
 ```
 
-### Step 3: Add Conditional Theme Logic
-
-Replace your existing theme configuration with this conditional setup:
-
-```bash
-# =============================================================================
-# CURSOR COMPATIBILITY CONFIGURATION
-# =============================================================================
-
-# Detect if we're running in Cursor/VSCode
-if [[ "$TERM_PROGRAM" == "vscode" ]]; then
-  # Simple theme for Cursor compatibility
-  ZSH_THEME=""
-  
-  # Set a clean, minimal prompt
-  PROMPT='%F{blue}%n@%m%f:%F{green}%~%f%# '
-  RPROMPT='%F{yellow}[%T]%f'
-  
-  # Optional: Add git status for Cursor
-  autoload -Uz vcs_info
-  precmd() { vcs_info }
-  zstyle ':vcs_info:git:*' formats '%F{red}(%b)%f'
-  PROMPT='%F{blue}%n@%m%f:%F{green}%~%f${vcs_info_msg_0_}%# '
-  
-else
-  # Full-featured theme for regular terminal
-  ZSH_THEME="powerlevel10k/powerlevel10k"
-fi
-
-# Load Oh My Zsh
-source $ZSH/oh-my-zsh.sh
-
-# =============================================================================
-# POST-LOADING CONFIGURATION
-# =============================================================================
-
-# Load Powerlevel10k config only for non-Cursor terminals
-if [[ "$TERM_PROGRAM" != "vscode" && -f ~/.p10k.zsh ]]; then
-  source ~/.p10k.zsh
-fi
-
-# Optional: Add Cursor-specific aliases
-if [[ "$TERM_PROGRAM" == "vscode" ]]; then
-  alias ll='ls -la'
-  alias cls='clear'
-  # Add your preferred aliases here
-fi
-```
-
-### Step 4: Alternative Minimal Configuration
-
-If you prefer an even simpler approach, use this minimal version:
-
-```bash
-# Minimal Cursor-compatible configuration
-if [[ "$TERM_PROGRAM" == "vscode" ]]; then
-  ZSH_THEME=""
-  PROMPT='%n@%m:%~%# '
-  RPROMPT=''
-else
-  ZSH_THEME="powerlevel10k/powerlevel10k"
-fi
-
-source $ZSH/oh-my-zsh.sh
-
-# Load P10k config for non-Cursor terminals only
-if [[ "$TERM_PROGRAM" != "vscode" ]]; then
-  [[ -f ~/.p10k.zsh ]] && source ~/.p10k.zsh
-fi
-```
-
-## 🔄 Testing the Solution
-
-### Step 1: Reload Your Configuration
-
-After saving the changes, reload your ZSH configuration:
-
+3. **Reload config:**
 ```bash
 source ~/.zshrc
 ```
 
-### Step 2: Restart Cursor
+## Usage
 
-Close and reopen Cursor completely to ensure the new configuration takes effect.
-
-### Step 3: Test Terminal Commands
-
-Try running various commands in Cursor to verify the fix:
-
+**Try commands normally first** - many work fine with Powerlevel10k:
 ```bash
-# Test basic commands
-pwd
-ls -la
-
-# Test longer running commands
 npm install
 git status
-
-# Test interactive commands
-ping google.com -c 3
 ```
 
-## 🎯 Expected Results
-
-After implementing this fix, you should experience:
-
-- ✅ **No More Hanging**: Commands complete normally without getting stuck
-- ✅ **Faster Response**: Cursor's AI responds immediately after command execution
-- ✅ **Clean Prompts**: Simple, readable terminal output
-- ✅ **Maintained Functionality**: All your aliases and functions still work
-- ✅ **Best of Both Worlds**: Full theme in regular terminal, compatibility in Cursor
-
-## 🔧 Advanced Customization
-
-### Custom Cursor Prompt
-
-You can create a more informative prompt specifically for Cursor:
-
+**If hanging occurs**, use the simple prompt:
 ```bash
-if [[ "$TERM_PROGRAM" == "vscode" ]]; then
-  # Custom Cursor prompt with git info
-  autoload -Uz vcs_info
-  precmd() { vcs_info }
-  zstyle ':vcs_info:git:*' formats ' [%F{red}%b%f]'
-  
-  PROMPT='%F{cyan}cursor%f %F{blue}%n%f@%F{green}%m%f:%F{yellow}%~%f${vcs_info_msg_0_}
-%F{magenta}➜%f '
-fi
+simple-prompt && npm install
 ```
 
-### Environment-Specific Aliases
-
-Add Cursor-specific shortcuts:
-
+**For multiple commands:**
 ```bash
-if [[ "$TERM_PROGRAM" == "vscode" ]]; then
-  alias c='clear'
-  alias l='ls -CF'
-  alias la='ls -A'
-  alias ll='ls -alF'
-  alias ..='cd ..'
-  alias ...='cd ../..'
-fi
+simple-prompt && npm install && npm run dev
 ```
 
-## 🛟 Troubleshooting
+**Restore your theme afterward (optional):**
+```bash
+restore-prompt
+```
 
-### If the Issue Persists:
+## Result
 
-1. **Check Environment Variable**: Verify Cursor sets the correct variable:
-   ```bash
-   echo $TERM_PROGRAM
-   ```
+- ✅ Beautiful Powerlevel10k theme everywhere by default
+- ✅ No hanging when using simple-prompt workaround
+- ✅ You control when to apply the fix
+- ✅ Perfect for both manual terminal use and AI commands
 
-2. **Try Alternative Detection**: Some setups might need different detection:
-   ```bash
-   if [[ "$VSCODE_INJECTION" == "1" ]] || [[ "$TERM_PROGRAM" == "vscode" ]]; then
-   ```
-
-3. **Complete Theme Disable**: For stubborn cases, temporarily disable all themes:
-   ```bash
-   ZSH_THEME=""
-   ```
-
-4. **Check Oh My Zsh Plugins**: Some plugins might interfere:
-   ```bash
-   plugins=(git)  # Minimal plugin set for testing
-   ```
-
-## 📚 Additional Resources
-
-- [Cursor Community Forum](https://forum.cursor.com/)
-- [Powerlevel10k Documentation](https://github.com/romkatv/powerlevel10k)
-- [Oh My Zsh Documentation](https://ohmyz.sh/)
-- [ZSH Manual](https://zsh.sourceforge.io/Doc/)
-
-## 🎉 Conclusion
-
-This workaround effectively resolves the Cursor hanging issue while maintaining the rich terminal experience you're used to. The conditional configuration ensures you get the best of both worlds: **compatibility in Cursor and full theming in your regular terminal**.
-
-While this is a temporary solution until Cursor officially fixes the underlying parsing issue, it provides a stable development environment that doesn't compromise your workflow.
-
----
-
-**💡 Pro Tip**: Consider creating a shell script to quickly switch between different prompt configurations if you frequently switch between different editors and terminal setups.
-
-**🔗 Found this helpful?** Share it with other developers experiencing similar issues, and feel free to suggest improvements or alternative solutions in the comments!
-
-
-
-
-
-
-
+**Much simpler and smarter** than solutions that disable your theme completely. You get the best of both worlds!

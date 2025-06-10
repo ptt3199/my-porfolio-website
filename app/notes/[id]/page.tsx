@@ -80,10 +80,23 @@ export default async function NotePage({ params }: { params: { id: string } }) {
         </header>
 
         {/* Article Content */}
-        <article className="prose prose-lg dark:prose-invert max-w-none">
+        <article className="prose dark:prose-invert max-w-none">
           <div 
             dangerouslySetInnerHTML={{ __html: note.content }}
-            className="prose-headings:scroll-mt-16 prose-pre:bg-gray-900 prose-pre:text-gray-100 prose-code:text-blue-600 dark:prose-code:text-blue-400"
+            className="
+              prose-headings:scroll-mt-16 
+              prose-p:text-base prose-p:leading-7
+              prose-h1:text-2xl prose-h1:font-bold prose-h1:mb-4 prose-h1:mt-8
+              prose-h2:text-xl prose-h2:font-semibold prose-h2:mb-3 prose-h2:mt-6
+              prose-h3:text-lg prose-h3:font-medium prose-h3:mb-2 prose-h3:mt-4
+              prose-h4:text-base prose-h4:font-medium prose-h4:mb-2 prose-h4:mt-3
+              prose-ul:my-4 prose-li:my-1
+              prose-pre:bg-gray-900 prose-pre:text-gray-100 prose-pre:text-sm
+              prose-code:text-blue-600 dark:prose-code:text-blue-400 prose-code:text-sm
+              prose-strong:font-semibold
+              prose-em:italic
+              prose-blockquote:border-l-4 prose-blockquote:border-blue-500 prose-blockquote:pl-4 prose-blockquote:italic
+            "
           />
         </article>
 
