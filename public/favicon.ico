@@ -1,0 +1,4 @@
+# This file should be replaced with your avatar.png renamed to favicon.ico
+# You can use online tools to convert avatar.png to favicon.ico format
+# Or use this command if you have ImageMagick installed:
+# convert avatar.png -resize 32x32 favicon.ico 

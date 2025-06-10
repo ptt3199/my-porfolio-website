@@ -5,7 +5,6 @@ import { Header } from './components/header'
 import { Avatar } from './components/avatar'
 import { SocialIcons } from './components/social-icons'
 import { Navigation } from './components/navigation'
-import { Footer } from './components/footer'
 import { TechShowcase } from './components/tech-showcase'
 
 // Structured data for SEO
@@ -89,7 +88,6 @@ export default function Home() {
           </div>
         </main>
 
-        {/* <Footer /> */}
       </div>
     </>
   )

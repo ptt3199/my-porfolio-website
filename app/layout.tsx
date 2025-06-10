@@ -72,7 +72,17 @@ export const metadata: Metadata = {
     },
   },
   verification: {
-    google: 'your-google-verification-code', // You'll need to get this from Google Search Console
+    google: '7eusWNMI0pkBN1SLT-gWLZPG8GvMvA1VGuR4iRpeY-M', // You'll need to get this from Google Search Console
+  },
+  icons: {
+    icon: [
+      { url: '/avatar.png', sizes: '32x32', type: 'image/png' },
+      { url: '/avatar.png', sizes: '16x16', type: 'image/png' },
+    ],
+    apple: [
+      { url: '/avatar.png', sizes: '180x180', type: 'image/png' },
+    ],
+    shortcut: '/avatar.png',
   },
 }
 
