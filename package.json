@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@radix-ui/react-slot": "^1.2.2",
+    "@stagewise-plugins/react": "^0.4.7",
     "@stagewise/toolbar": "^0.4.4",
     "@stagewise/toolbar-next": "^0.4.4",
     "@tailwindcss/typography": "^0.5.10",

@@ -103,7 +103,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           </MusicProvider>
         </ThemeProvider>
         <StagewiseInit />
-        <div id="stagewise-toolbar-root"></div>
       </body>
     </html>
   )
