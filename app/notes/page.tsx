@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { useState, useEffect } from 'react'
 import { Header } from '../components/header'
+import { QuickCreateNote } from '../components/QuickCreateNote'
 import { Calendar, Clock, Tag, X } from 'lucide-react'
 
 interface NoteMeta {
@@ -266,6 +267,9 @@ export default function NotesPage() {
           </div>
         )}
       </main>
+      
+      {/* Quick Create Note Component */}
+      <QuickCreateNote onNoteCreated={() => window.location.reload()} />
     </div>
   )
 } 

@@ -6,9 +6,15 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    "blog:create": "node scripts/blog-assistant.js create",
+    "blog:save": "node scripts/blog-assistant.js save",
+    "blog:analyze": "node scripts/blog-assistant.js analyze",
+    "deploy:notes": "node scripts/deploy-notes.js",
+    "test:github": "node scripts/test-github-token.js"
   },
   "dependencies": {
+    "@google/generative-ai": "^0.24.1",
     "@radix-ui/react-slot": "^1.2.2",
     "@stagewise-plugins/react": "^0.4.7",
     "@stagewise/toolbar": "^0.4.7",
@@ -16,6 +22,8 @@
     "@tailwindcss/typography": "^0.5.10",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "dot-env": "^0.0.1",
+    "dotenv": "^16.5.0",
     "framer-motion": "^11.18.2",
     "gray-matter": "^4.0.3",
     "lucide-react": "^0.344.0",
