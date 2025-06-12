@@ -101,7 +101,13 @@ export async function POST(request: NextRequest) {
     
     const result = await model.generateContent(prompt)
     const response = result.response
-    const generatedContent = response.text()
+    let generatedContent = response.text()
+
+    // Clean up markdown backticks that AI might add
+    generatedContent = generatedContent
+      .replace(/^```markdown\s*\n?/i, '') // Remove opening ```markdown
+      .replace(/\n?```\s*$/i, '') // Remove closing ```
+      .trim()
 
     return NextResponse.json({
       content: generatedContent,

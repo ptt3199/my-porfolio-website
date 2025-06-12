@@ -1,10 +1,12 @@
 'use client'
 
-import Link from 'next/link'
 import { useState, useEffect } from 'react'
 import { Header } from '../components/header'
 import { QuickCreateNote } from '../components/QuickCreateNote'
-import { Calendar, Clock, Tag, X } from 'lucide-react'
+import { AdminLogin } from '../components/AdminLogin'
+import { NoteItem } from '../components/NoteItem'
+import { AdminAuthProvider } from '../contexts/AdminAuthContext'
+import { X } from 'lucide-react'
 
 interface NoteMeta {
   id: string
@@ -16,7 +18,7 @@ interface NoteMeta {
   readTime: number
 }
 
-export default function NotesPage() {
+function NotesPageContent() {
   const [notes, setNotes] = useState<NoteMeta[]>([])
   const [categories, setCategories] = useState<string[]>([])
   const [allTags, setAllTags] = useState<string[]>([])
@@ -27,26 +29,27 @@ export default function NotesPage() {
   const [selectedTags, setSelectedTags] = useState<string[]>([])
 
   // Load data on component mount
-  useEffect(() => {
-    async function loadData() {
-      try {
-        const response = await fetch('/api/notes')
-        if (!response.ok) {
-          throw new Error('Failed to fetch notes')
-        }
-        
-        const data = await response.json()
-        setNotes(data.notes)
-        setCategories(data.categories)
-        setAllTags(data.tags)
-      } catch (error) {
-        console.error('Error loading notes:', error)
-        setError(error instanceof Error ? error.message : 'Failed to load notes')
-      } finally {
-        setLoading(false)
+  const loadData = async () => {
+    try {
+      setLoading(true)
+      const response = await fetch('/api/notes')
+      if (!response.ok) {
+        throw new Error('Failed to fetch notes')
       }
+      
+      const data = await response.json()
+      setNotes(data.notes)
+      setCategories(data.categories)
+      setAllTags(data.tags)
+    } catch (error) {
+      console.error('Error loading notes:', error)
+      setError(error instanceof Error ? error.message : 'Failed to load notes')
+    } finally {
+      setLoading(false)
     }
-    
+  }
+
+  useEffect(() => {
     loadData()
   }, [])
 
@@ -76,6 +79,10 @@ export default function NotesPage() {
     setSelectedTags([])
   }
 
+  const handleNoteCreatedOrDeleted = () => {
+    loadData() // Refresh the data
+  }
+
   if (loading) {
     return (
       <div className="min-h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100">
@@ -98,7 +105,7 @@ export default function NotesPage() {
           <div className="text-center">
             <p className="text-red-600 dark:text-red-400">Error: {error}</p>
             <button 
-              onClick={() => window.location.reload()} 
+              onClick={loadData} 
               className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
             >
               Retry
@@ -191,85 +198,39 @@ export default function NotesPage() {
         )}
 
         {/* Notes Grid */}
-        <div className="space-y-8">
-          {filteredNotes.map((note) => (
-            <Link
-              key={note.id}
-              href={`/notes/${note.id}`}
-              className="block p-6 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 hover:shadow-lg transition-shadow cursor-pointer"
-            >
-              <article className="space-y-4">
-                {/* Header */}
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between flex-wrap gap-2">
-                    <span className="text-xs px-2 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded-full">
-                      {note.category}
-                    </span>
-                    <div className="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400">
-                      <div className="flex items-center gap-1">
-                        <Calendar className="h-4 w-4" />
-                        <span>{new Date(note.publishedAt).toLocaleDateString('en-US', { 
-                          year: 'numeric', 
-                          month: 'long', 
-                          day: 'numeric' 
-                        })}</span>
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <Clock className="h-4 w-4" />
-                        <span>{note.readTime} min read</span>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
-                    {note.title}
-                  </h2>
-                </div>
-
-                {/* Description */}
-                <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
-                  {note.description}
-                </p>
-
-                {/* Tags */}
-                <div className="flex items-center gap-2 flex-wrap">
-                  <Tag className="h-4 w-4 text-gray-400" />
-                  {note.tags.map((tag) => (
-                    <span
-                      key={tag}
-                      className="text-xs px-2 py-1 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded"
-                    >
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-
-                {/* Read More */}
-                <div className="pt-2">
-                  <span className="text-blue-600 dark:text-blue-400 font-medium hover:underline">
-                    Read more →
-                  </span>
-                </div>
-              </article>
-            </Link>
-          ))}
+        <div className="space-y-6">
+          {filteredNotes.length > 0 ? (
+            filteredNotes.map((note) => (
+              <NoteItem 
+                key={note.id} 
+                note={note} 
+                onNoteDeleted={handleNoteCreatedOrDeleted}
+              />
+            ))
+          ) : (
+            <div className="text-center py-12">
+              <p className="text-gray-600 dark:text-gray-400">
+                {selectedCategory || selectedTags.length > 0 
+                  ? 'No notes found with the selected filters.'
+                  : 'No notes found.'
+                }
+              </p>
+            </div>
+          )}
         </div>
-
-        {/* Empty State */}
-        {filteredNotes.length === 0 && (
-          <div className="text-center py-12">
-            <p className="text-gray-500 dark:text-gray-400">
-              {notes.length === 0 
-                ? "No notes published yet. Check back soon for my latest thoughts and insights!"
-                : "No notes match your current filters. Try adjusting your selection or clear all filters."
-              }
-            </p>
-          </div>
-        )}
       </main>
-      
-      {/* Quick Create Note Component */}
-      <QuickCreateNote onNoteCreated={() => window.location.reload()} />
+
+      {/* Admin Controls */}
+      <AdminLogin />
+      <QuickCreateNote onNoteCreated={handleNoteCreatedOrDeleted} />
     </div>
+  )
+}
+
+export default function NotesPage() {
+  return (
+    <AdminAuthProvider>
+      <NotesPageContent />
+    </AdminAuthProvider>
   )
 } 
