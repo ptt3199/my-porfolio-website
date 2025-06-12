@@ -1,7 +1,7 @@
 # System Patterns
 
 ## Architecture Overview
-The portfolio website follows a component-based architecture using Next.js App Router and React Server Components where possible. The design emphasizes minimalism and technical aesthetics while maintaining high performance and accessibility.
+The portfolio website follows a component-based architecture using Next.js App Router and React Server Components where possible. The design emphasizes minimalism and technical aesthetics while maintaining high performance and accessibility. The system now includes a comprehensive admin authentication and note management system built with security and UX best practices.
 
 ## Component Hierarchy
 ```mermaid
@@ -9,6 +9,7 @@ graph TD
     RootLayout[RootLayout] --> Header
     RootLayout --> MainContent[Main Content]
     RootLayout --> Footer[Footer Home Only]
+    RootLayout --> AdminProvider[AdminAuthProvider]
     
     Header --> ThemeToggle
     Header --> MusicPlayer
@@ -30,6 +31,21 @@ graph TD
     Resume --> ResumeContent[Content Sections]
     Resume --> DownloadCV[CV Download]
     
+    Notes --> NotesGrid[Notes Grid]
+    Notes --> FilterSystem[Filter System]
+    Notes --> AdminControls[Admin Controls]
+    
+    NotesGrid --> NoteItem[Note Items]
+    NoteItem --> DeleteButton[Admin Delete]
+    
+    AdminControls --> AdminLogin[Lock/Unlock Button]
+    AdminControls --> QuickCreateNote[Create Button]
+    
+    AdminProvider --> AuthContext[Auth State]
+    AuthContext --> AdminLogin
+    AuthContext --> QuickCreateNote
+    AuthContext --> NoteItem
+    
     NotFound --> AnimatedElements[Animations]
     NotFound --> ErrorMessage[404 Message]
     NotFound --> HomeButton[Return Home]
@@ -39,6 +55,18 @@ graph TD
 ```
 
 ## Key Design Patterns
+
+### Admin Authentication System
+- **React Context Pattern**: Global authentication state management
+- **Floating UI Pattern**: Lock/unlock button with modal interface
+- **Role-based Rendering**: Admin-only components (create/delete)
+- **Security Pattern**: Client-side SHA256 hashing with environment variables
+
+### Note Management System
+- **CRUD Operations**: Create, Read, Update, Delete for notes
+- **Confirmation Patterns**: User confirmation for destructive actions
+- **State Synchronization**: Real-time updates with callback patterns
+- **API Integration**: GitHub API for production deployment
 
 ### Theme Management
 - Context-based theme management using next-themes
@@ -51,41 +79,129 @@ graph TD
 - Consistent link styling and animations
 
 ### Component Patterns
-1. **Atomic Components**
+1. **Authentication Components**
+   - AdminAuthProvider: Context provider for global auth state
+   - AdminLogin: Floating lock icon with secure modal
+   - useAdminAuth: Custom hook for authentication state
+
+2. **Note Management Components**
+   - QuickCreateNote: AI-powered note creation (admin-only)
+   - NoteItem: Enhanced note cards with delete functionality
+   - NotesPage: Integrated admin controls
+
+3. **Atomic Components**
    - ThemeToggle: Simple icon switch
    - MusicPlayer: Integrated in header
    - Avatar: Profile image with animated border
    - SocialIcons: External link buttons
    - DownloadCV: Resume download button
 
-2. **Page Components**
+4. **Page Components**
    - Home: Landing page with footer
    - Resume: Structured content with CV download
+   - Notes: Dynamic content with admin management
    - NotFound: Engaging 404 page with animations
-   - Notes & Contact: Planned pages
+   - Contact: Form with email integration
 
-3. **Feature Components**
+5. **Feature Components**
    - Footer: Homepage-exclusive component
    - QuoteSystem: Auto-rotating quotes
    - SystemDiagram: Technical stack visualization
 
 ### Animation Patterns
-1. **Theme Transitions**
+1. **Admin UI Animations**
+   - Lock/unlock icon transitions
+   - Hover-reveal delete buttons
+   - Modal entrance/exit animations
+   - Loading states with spinners
+
+2. **Theme Transitions**
    - Clean icon switches
    - Color transitions
    - Background blur effects
 
-2. **Interactive Elements**
+3. **Interactive Elements**
    - Hover state animations
    - Focus state highlights
    - Click feedback
 
-3. **404 Page Animations**
+4. **404 Page Animations**
    - Coffee cup steam effect
    - Moving debug bug
    - Home button rotation
 
 ## Technical Implementation
+
+### Admin Authentication Pattern
+```typescript
+// Context Provider
+const AdminAuthProvider = ({ children }) => {
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
+  
+  const login = async (password: string) => {
+    const hashedPassword = CryptoJS.SHA256(password).toString()
+    const response = await fetch('/api/auth/quick-create', {
+      method: 'POST',
+      body: JSON.stringify({ password: hashedPassword })
+    })
+    if (response.ok) {
+      setIsAuthenticated(true)
+      return true
+    }
+    return false
+  }
+  
+  return (
+    <AdminAuthContext.Provider value={{ isAuthenticated, login, logout }}>
+      {children}
+    </AdminAuthContext.Provider>
+  )
+}
+
+// Hook Usage
+const useAdminAuth = () => {
+  const context = useContext(AdminAuthContext)
+  if (!context) {
+    throw new Error('useAdminAuth must be used within AdminAuthProvider')
+  }
+  return context
+}
+```
+
+### Note Management Pattern
+```typescript
+// Note Item with Delete
+const NoteItem = ({ note, onNoteDeleted }) => {
+  const { isAuthenticated } = useAdminAuth()
+  
+  const handleDelete = async () => {
+    if (!confirm(`Delete "${note.title}"?`)) return
+    
+    const response = await fetch('/api/notes/delete', {
+      method: 'DELETE',
+      body: JSON.stringify({ filename: note.id })
+    })
+    
+    if (response.ok) {
+      onNoteDeleted?.()
+    }
+  }
+  
+  return (
+    <div className="group relative">
+      {isAuthenticated && (
+        <button 
+          onClick={handleDelete}
+          className="opacity-0 group-hover:opacity-100"
+        >
+          <Trash2 />
+        </button>
+      )}
+      {/* Note content */}
+    </div>
+  )
+}
+```
 
 ### Theme System
 ```typescript
@@ -113,49 +229,108 @@ const Header = () => {
 }
 ```
 
-### 404 Page Animations
+## Security Patterns
+
+### Password Security
 ```typescript
-const NotFound = () => {
-  const [bugPosition, setBugPosition] = useState({ x: 50, y: 50 })
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setBugPosition({
-        x: Math.random() * 80 + 10,
-        y: Math.random() * 80 + 10,
-      })
-    }, 2000)
-    return () => clearInterval(interval)
-  }, [])
-  // ... render JSX
+// Client-side hashing before transmission
+const hashPassword = (password: string) => {
+  return CryptoJS.SHA256(password).toString()
+}
+
+// Environment variable hash comparison
+const ADMIN_PASSWORD_HASH = process.env.QUICK_CREATE_PASSWORD_HASH
+```
+
+### API Security
+```typescript
+// Path traversal protection
+const sanitizedFilename = filename.replace(/[^a-zA-Z0-9-_]/g, '')
+const resolvedPath = path.resolve(filePath)
+if (!resolvedPath.startsWith(resolvedNotesDir)) {
+  return NextResponse.json({ error: 'Invalid file path' }, { status: 400 })
+}
+```
+
+### Input Validation
+```typescript
+// Filename sanitization
+const fullFilename = sanitizedFilename.endsWith('.md') 
+  ? sanitizedFilename 
+  : `${sanitizedFilename}.md`
+```
+
+## API Patterns
+
+### Authentication API
+```typescript
+// /api/auth/quick-create
+export async function POST(request: NextRequest) {
+  const { password } = await request.json()
+  
+  if (password === ADMIN_PASSWORD_HASH) {
+    return NextResponse.json({ success: true })
+  }
+  
+  return NextResponse.json({ error: 'Invalid password' }, { status: 401 })
+}
+```
+
+### CRUD Operations
+```typescript
+// /api/notes/delete
+export async function DELETE(request: NextRequest) {
+  const { filename } = await request.json()
+  
+  // Security validation
+  // File deletion
+  // GitHub API integration
+  
+  return NextResponse.json({ success: true })
 }
 ```
 
 ## Style Patterns
-1. **Color System**
+1. **Admin UI Styling**
+   - Floating controls with z-index management
+   - Hover-reveal patterns with opacity transitions
+   - Modal overlays with backdrop blur
+   - Confirmation dialogs with proper focus management
+
+2. **Color System**
    - Primary/Secondary theme colors
    - Dark/light mode variants
    - Accent colors for interaction
+   - Status colors (success/error/warning)
 
-2. **Typography**
+3. **Typography**
    - Space Grotesk for headings
    - Inter for body text
    - Responsive font scaling
 
-3. **Layout**
+4. **Layout**
    - Mobile-first approach
    - Grid/Flex combinations
    - Responsive breakpoints
+   - Admin overlay positioning
 
-4. **Animations**
+5. **Animations**
    - 200ms-300ms transitions
    - Ease-in-out timing
    - Hardware-accelerated transforms
+   - Loading state animations
 
 ## Component Relationships
 ```mermaid
 graph TD
-    Layout[Layout Component] --> Header[Header]
+    Layout[Layout Component] --> AdminProvider[AdminAuthProvider]
+    Layout --> Header[Header]
     Layout --> Pages[Page Components]
+    
+    AdminProvider --> AuthContext[Auth State]
+    AuthContext --> AdminLogin[Admin Login]
+    AuthContext --> QuickCreateNote[Note Creation]
+    AuthContext --> NoteItem[Note Management]
     
     Header --> ThemeToggle
     Header --> MusicPlayer
@@ -163,8 +338,12 @@ graph TD
     
     Pages --> Home[Home Page]
     Pages --> Resume[Resume Page]
+    Pages --> Notes[Notes Page]
     Pages --> Error[404 Page]
-    Pages --> Future[Future Pages]
+    
+    Notes --> FilterSystem[Filtering]
+    Notes --> NotesGrid[Notes Display]
+    Notes --> AdminControls[Admin UI]
     
     Home --> HomeNav[Home Navigation]
     Home --> Footer[Footer]
@@ -176,37 +355,84 @@ graph TD
     Error --> ReturnHome[Home Button]
 ```
 
+## State Management Patterns
+
+### Authentication Flow
+```mermaid
+graph LR
+    UserClick[Lock Icon Click] --> LoginModal[Login Modal]
+    LoginModal --> PasswordHash[SHA256 Hash]
+    PasswordHash --> APICall[Auth API]
+    APICall --> AuthSuccess{Success?}
+    AuthSuccess -->|Yes| UpdateState[Set Authenticated]
+    AuthSuccess -->|No| ShowError[Show Error]
+    UpdateState --> ShowControls[Show Admin Controls]
+```
+
+### Note Management Flow
+```mermaid
+graph LR
+    AdminAuth[Authenticated] --> CreateNote[Create Note]
+    AdminAuth --> DeleteNote[Delete Note]
+    
+    CreateNote --> AIGenerate[AI Generation]
+    AIGenerate --> SaveNote[Save to File]
+    SaveNote --> GitHubAPI[GitHub API]
+    GitHubAPI --> RefreshUI[Refresh Notes]
+    
+    DeleteNote --> Confirm[User Confirm]
+    Confirm --> DeleteFile[Delete File]
+    DeleteFile --> GitHubDelete[GitHub Delete]
+    GitHubDelete --> RefreshUI
+```
+
 ## Key Technical Decisions
-1. Footer exclusive to homepage
-2. Conditional navigation in header
-3. Animated 404 page for better UX
-4. CV download in resume page
-5. Theme toggle simplification
+1. **Authentication**: Single admin user with SHA256 hashing (simplicity over OAuth)
+2. **State Management**: React Context for global admin state
+3. **UI Pattern**: Floating controls for clean admin interface
+4. **Security**: Client-side hashing with environment variable validation
+5. **Deployment**: GitHub API integration for production note management
+6. Footer exclusive to homepage
+7. Conditional navigation in header
+8. Animated 404 page for better UX
+9. CV download in resume page
+10. Theme toggle simplification
 
 ## Data Flow
-1. **Theme Updates**
-   ```mermaid
-   graph LR
-       ThemeToggle --> ThemeContext
-       ThemeContext --> Components[All Components]
-       ThemeContext --> LocalStorage
-   ```
 
-2. **Music Player**
-   ```mermaid
-   graph LR
-       YouTubeAPI --> PlayerState
-       PlayerState --> PlaybackControls
-       PlayerState --> VisualFeedback
-   ```
+### Authentication Data Flow
+```mermaid
+graph LR
+    PasswordInput --> ClientHash[SHA256 Hash]
+    ClientHash --> API[Auth API]
+    API --> EnvCompare[Environment Hash Compare]
+    EnvCompare --> AuthState[Update Auth State]
+    AuthState --> UIUpdate[Show/Hide Admin Controls]
+```
 
-3. **Quote System**
-   ```mermaid
-   graph LR
-       Timer --> QuoteState
-       ManualControl --> QuoteState
-       QuoteState --> Display
-   ```
+### Note Management Data Flow
+```mermaid
+graph LR
+    UserAction[Create/Delete] --> AuthCheck[Check Auth State]
+    AuthCheck --> APICall[Note API]
+    APICall --> FileSystem[File Operations]
+    FileSystem --> GitHubAPI[GitHub Integration]
+    GitHubAPI --> StateCallback[Refresh Callback]
+    StateCallback --> UIRefresh[Update UI]
+```
 
-## System Constraints
-[To be filled with system constraints] 
+### Theme Updates
+```mermaid
+graph LR
+    ThemeToggle --> ThemeContext
+    ThemeContext --> Components[All Components]
+    ThemeContext --> LocalStorage
+```
+
+### Music Player
+```mermaid
+graph LR
+    YouTubeAPI --> PlayerState
+    PlayerState --> PlaybackControls
+    PlayerState --> VisualFeedback
+``` 
