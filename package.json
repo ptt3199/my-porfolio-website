@@ -11,8 +11,8 @@
   "dependencies": {
     "@radix-ui/react-slot": "^1.2.2",
     "@stagewise-plugins/react": "^0.4.7",
-    "@stagewise/toolbar": "^0.4.4",
-    "@stagewise/toolbar-next": "^0.4.4",
+    "@stagewise/toolbar": "^0.4.7",
+    "@stagewise/toolbar-next": "^0.4.7",
     "@tailwindcss/typography": "^0.5.10",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",

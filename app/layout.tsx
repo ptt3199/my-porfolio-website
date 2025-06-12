@@ -2,7 +2,7 @@ import './globals.css'
 import { Space_Grotesk } from 'next/font/google'
 import { ThemeProvider } from './components/theme-provider'
 import { MusicProvider } from './contexts/music-context'
-import StagewiseInit from './components/stagewise-init'
+// import StagewiseInit from './components/stagewise-init'
 import type { Metadata } from 'next'
 
 const spaceGrotesk = Space_Grotesk({
@@ -102,7 +102,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           {children}
           </MusicProvider>
         </ThemeProvider>
-        <StagewiseInit />
+        {/* <StagewiseInit /> */}
       </body>
     </html>
   )
