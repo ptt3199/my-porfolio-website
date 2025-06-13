@@ -1,0 +1,186 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Twenty Seconds Resume/CV
+% LaTeX Template
+% Version 1.2 (Updated for better spacing)
+% (Updated for Phuong Tan Thanh, Backend DevOps Engineer)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\documentclass[10pt, a4paper]{article}
+
+% --- GÓI CẦN THIẾT ---
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{titlesec}
+\usepackage{enumitem}
+\usepackage{tabularx}
+\usepackage{xcolor}
+
+% --- CẤU HÌNH TRANG ---
+\geometry{a4paper, margin=0.6in}
+\pagestyle{empty}
+
+% --- TÙY CHỈNH MÀU SẮC VÀ LIÊN KẾT ---
+\definecolor{primaryblue}{HTML}{003366}
+\hypersetup{
+    colorlinks=true,
+    urlcolor=primaryblue,
+    linkcolor=primaryblue,
+    pdftitle={Phuong Tan Thanh - CV},
+    pdfauthor={Phuong Tan Thanh}
+}
+
+% --- TÙY CHỈNH TIÊU ĐỀ CÁC PHẦN ---
+\titleformat{\section}
+  {\vspace{6pt}\Large\bfseries\scshape\raggedright}
+  {}
+  {0em}
+  {}
+  [\color{gray}\titlerule\vspace{2pt}]
+\titlespacing*{\section}{0pt}{8pt}{5pt}
+
+% --- TÙY CHỈNH DANH SÁCH (BULLET POINTS) ---
+\setlist[itemize]{leftmargin=*, noitemsep, topsep=2pt, parsep=1pt}
+
+% --- CÁC LỆNH TÙY CHỈNH CHO CV ---
+\newcommand{\cvevent}[4]{%
+  \noindent\begin{tabular*}{\textwidth}{@{}l@{\extracolsep{\fill}}r@{}}
+    \textbf{\large #1} & \textbf{#4} \\
+    \textit{#2} & \textit{#3} \\
+  \end{tabular*}\vspace{2pt}
+}
+
+% --- BẮT ĐẦU TÀI LIỆU ---
+\begin{document}
+
+% --- PHẦN ĐẦU TRANG (HEADER) ---
+\begin{center}
+    {\Huge\bfseries Phuong Tan Thanh}
+    \vspace{2 pt}
+    
+    \small
+    Go Vap, Ho Chi Minh City \textbar\ 
+    \href{mailto:phuongtanthanh99@gmail.com}{phuongtanthanh99@gmail.com} \textbar\ 
+    0868 970 552 \\
+    \href{https://linkedin.com/in/thanh-phuongtan/}{linkedin.com/in/thanh-phuongtan} \textbar\ 
+    \href{https://github.com/ptt3199}{github.com/ptt3199} \textbar\ 
+    \href{https://phuongtanthanh.vercel.app}{phuongtanthanh.vercel.app}
+\end{center}
+
+% --- TÓM TẮT CHUYÊN MÔN ---
+\section*{Professional Summary}
+Backend Engineer with hands-on experience in Python, FastAPI, Next.js, and cloud platforms (AWS, GCP). Proven ability to design, deploy, and maintain scalable microservices, CI/CD pipelines, and secure backend systems. Quick learner, strong communicator, and passionate about delivering clean, maintainable code. Recognized for technical leadership, problem-solving, and collaboration in fast-paced environments.
+
+% --- KINH NGHIỆM LÀM VIỆC ---
+\section{Experience}
+
+\cvevent{Backend Developer}{IPSIP}{Ho Chi Minh City, Vietnam}{Mar 2025 -- Present}
+\begin{itemize}
+    \item Develop and maintain Python-based backend microservices using FastAPI for security threat detection products
+    \item Implement serverless backend services with AWS Chalice and DynamoDB, optimizing for scalability and performance
+    \item Collaborate with data science teams to transform ML models into production-ready RESTful APIs and web interfaces
+    \item Provide technical support and solutions to internal teams, translating business requirements into technical implementations
+    \item Apply clean code principles and maintain comprehensive documentation for all backend services
+\end{itemize}
+\vspace{5 pt}
+\cvevent{Backend Developer}{Oryza System JSC}{Ho Chi Minh City, Vietnam}{Apr 2024 -- Mar 2025}
+\begin{itemize}
+    \item Led development team building Oryza-AI platform using Python, FastAPI, and microservices architecture
+    \item Designed and implemented RESTful and asynchronous APIs for camera management and AI integration systems
+    \item Established CI/CD pipelines using GitLab CI and Docker containerization for streamlined deployment processes
+    \item Architected scalable MongoDB database schemas and implemented RabbitMQ for reliable asynchronous task processing
+    \item Enhanced system security through Keycloak integration, comprehensive API authentication, and data encryption
+    \item Maintained Next.js frontend application, demonstrating full-stack capabilities across the technology stack
+    \item Optimized system performance through efficient database queries, strategic caching, and code refactoring
+    \item Collaborated with stakeholders to translate business needs into technical solutions and system updates
+\end{itemize}
+\vspace{5 pt}
+\cvevent{Data Scientist}{AIVision}{Ho Chi Minh City, Vietnam}{Jun 2023 -- Mar 2024}
+\begin{itemize}
+    \item Developed and deployed end-to-end AI-powered e-commerce chatbot using Langchain, OpenAI API, and RAG architecture
+    \item Built scalable backend systems for computer vision applications using AWS cloud services (DynamoDB, Lambda, API Gateway)
+    \item Implemented CI/CD pipelines using GitHub Actions for automated testing and deployment of web application backends
+    \item Applied Agile/Scrum methodologies in daily development, participating in scrums and sprint retrospectives
+    \item Collaborated with cross-functional teams to deliver high-quality solutions in fast-paced development environment
+    \item Recognized as Employee of the Year for exceptional technical contributions and problem-solving abilities
+    \item Maintained clean, efficient, and well-documented Python code following best practices and coding standards
+\end{itemize}
+
+% --- DỰ ÁN NỔI BẬT ---
+\section{Projects}
+
+\cvevent{Personal Portfolio Website}{Next.js, TypeScript, Tailwind CSS, Vercel}{2025 -- Ongoing}{}
+\begin{itemize}
+    \item Modern, responsive portfolio with markdown-based CMS, AI-powered note creation, and secure admin authentication
+    \item Integrated Google Gemini AI, GitHub API, and Stagewise for content management and development workflow
+    \item Deployed on Vercel with dark/light mode, dynamic project/blog management, and professional contact form
+    \item \textbf{Live:} \href{https://phuongtanthanh.vercel.app}{phuongtanthanh.vercel.app} \textbar\ \textbf{GitHub:} \href{https://github.com/ptt3199/my-website}{github.com/ptt3199/my-website}
+\end{itemize}
+\vspace{5 pt}
+\cvevent{Flash Card Learning App}{Next.js 15, Supabase, Clerk Auth, TypeScript}{2025 -- Ongoing}{}
+\begin{itemize}
+    \item Intelligent flashcard app for language learning with cloud sync, AI-powered definitions, and audio support
+    \item Dual storage (local/cloud), real-time sync, and mobile-optimized UI
+    \item Integrated Supabase PostgreSQL, Clerk Auth, and Dictionary APIs
+    \item \textbf{Live:} \href{https://flashcard-ptt.vercel.app}{flashcard-ptt.vercel.app} \textbar\ \textbf{GitHub:} \href{https://github.com/ptt3199/flashcard}{github.com/ptt3199/flashcard}
+\end{itemize}
+\vspace{5 pt}
+\cvevent{Bank QR Code Generator}{React, Go, Tailwind CSS, Vercel}{2025}{}
+\begin{itemize}
+    \item Fintech app generating TCCS 03:2018/NHNNVN compliant VietQR codes for all major Vietnamese banks
+    \item Ultra-fast Go serverless backend, React frontend, and mobile-friendly design
+    \item CRC-16 checksum validation, multi-bank support, and Vercel edge deployment
+    \item \textbf{Live:} \href{https://bank-qrcode-generator-phi.vercel.app}{bank-qrcode-generator-phi.vercel.app} \textbar\ \textbf{GitHub:} \href{https://github.com/ptt3199/bank-qrcode-generator}{github.com/ptt3199/bank-qrcode-generator}
+\end{itemize}
+
+% --- HỌC VẤN ---
+\section{Education}
+
+\cvevent{B.E. in Mechatronics}{Ho Chi Minh City University of Technology (PFIEV Program)}{Ho Chi Minh City, Vietnam}{Aug 2018 -- Jun 2023}
+\begin{itemize}
+    \item Thesis: Chinese Chess Robot (CV, ML, Python) -- 99.8\% accuracy in piece recognition
+    \item Developed chess engine, mechanical/electrical analysis, and demoed full system
+\end{itemize}
+\vspace{5 pt}
+\cvevent{Math Major}{Hung Vuong Highschool for the Gifted}{Gia Lai, Vietnam}{Aug 2014 -- May 2017}
+\begin{itemize}
+    \item Vietnam National Informatics Olympiad participant; 2nd place provincial informatics (2015, 2016)
+\end{itemize}
+
+% --- CÔNG NGHỆ & KỸ NĂNG ---
+\section{Technologies}
+\noindent\begin{tabularx}{\textwidth}{@{} l X @{}}
+  \textbf{Backend} & Python (FastAPI, Django), Java (Spring Boot), RESTful API Design \\
+  \textbf{Databases} & PostgreSQL, MongoDB, DynamoDB, Supabase \\
+  \textbf{DevOps \& Cloud} & Docker, AWS (EC2, S3, Lambda, Chalice), Google Cloud Platform, CI/CD (GitHub Actions, GitLab CI), Traefik, RabbitMQ \\
+  \textbf{Frontend} & Next.js, React, TypeScript, HTML, CSS, JavaScript \\
+  \textbf{Tools \& Practices} & Git, Microservices, Agile/Scrum, Linux, Bash, Nginx, Unit Testing (pytest) \\
+  \textbf{Data Processing} & PowerBI \\
+\end{tabularx}
+
+% --- CHỨNG CHỈ & THÀNH TÍCH ---
+\section{Certifications \& Honors}
+\cvevent{Top 5 Most Active Mentees}{Back Khoa Mentoring Season 6}{Vietnam Alumni Mentoring}{2022}
+
+\cvevent{Online Certifications}{Coursera, Datacamp, Hackerrank}{}{2021 -- 2023}
+\begin{itemize}
+    \item Key areas: Machine Learning, Deep Learning, Cloud (GCP), SQL, Python, Java.
+\end{itemize}
+
+% --- HOẠT ĐỘNG NGOẠI KHÓA ---
+\section{Volunteering}
+\cvevent{Team Leader}{BKFC Toi Yeu Bach Khoa - THPT Chuyen Hung Vuong Gia Lai}{}{Nov 2018 -- Aug 2019}
+\begin{itemize}
+    \item Led a team of 20 members to organize an Admission Counseling program, attracting over 200 students.
+    \item Managed social media and created monthly performance reports.
+\end{itemize}
+
+% --- NGÔN NGỮ ---
+\section{Languages}
+\noindent\begin{tabular*}{\textwidth}{@{}l@{\extracolsep{\fill}}r@{}}
+  \textbf{English} & Professional working proficiency \\
+  \textbf{French} & Elementary proficiency \\
+\end{tabular*}
+
+\end{document} 
