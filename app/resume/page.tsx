@@ -297,7 +297,7 @@ export default function Resume() {
           <div className="flex items-center gap-6">
             <SocialIcons />
             <a
-              href="/documents/CV_PhuongTanThanh.pdf"
+              href="/documents/CV_Backend_Devops_PhuongTanThanh.pdf"
               download
               className="flex items-center gap-2 px-4 py-2 rounded-full bg-primary dark:bg-secondary text-white hover:bg-accent hover:dark:bg-accent transition-colors duration-200"
             >
