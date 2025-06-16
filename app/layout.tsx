@@ -4,6 +4,7 @@ import { ThemeProvider } from './components/theme-provider'
 import { MusicProvider } from './contexts/music-context'
 // import StagewiseInit from './components/stagewise-init'
 import type { Metadata } from 'next'
+import { Analytics } from '@vercel/analytics/react'
 
 const spaceGrotesk = Space_Grotesk({
   subsets: ['latin'],
@@ -103,6 +104,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           </MusicProvider>
         </ThemeProvider>
         {/* <StagewiseInit /> */}
+        <Analytics />
       </body>
     </html>
   )
