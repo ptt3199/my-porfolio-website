@@ -19,77 +19,38 @@ highlights:
 
 # Setup Server CLI Go
 
-A **minimal CLI tool written in Go** to automate the setup of a personal Ubuntu server for backend development. This project emerged from my need to **convert an old laptop into a development server** and provides an interactive interface to install essential packages like SSH, Docker, tmux, and other development tools — all in one streamlined process.
-
-## Project Context
-
-This CLI tool was created as part of a larger initiative to **turn my old laptop into a personal development server**. Instead of manually installing and configuring each tool every time I set up a new server environment, I built this automated solution to handle the repetitive setup tasks efficiently.
+A **minimal CLI tool written in Go** to automate the setup of a personal Ubuntu server for backend development. This project emerged from my need to **convert an old laptop into a development server** and provides an interactive interface to install essential packages like SSH, Docker, tmux, and other development tools.
 
 ## Key Features
 
-### 🎯 Interactive CLI Experience
-- **Main Menu Navigation**: Choose between different installation categories
-- **Selective Installation**: Pick specific tools to install rather than everything at once
+### Interactive CLI Experience
+- **Menu Navigation**: Choose between different installation categories
+- **Selective Installation**: Pick specific tools instead of installing everything
 - **Progress Feedback**: Real-time installation progress with emoji indicators
-- **Return to Menu**: Continue installing additional tools after each operation completes
-- **Multiple Selection**: Install single tools, multiple tools, or everything with flexible input options
+- **Flexible Selection**: Install single tools, multiple tools, or everything with `1 2 3` or `all` syntax
 
-### 📦 Comprehensive Tool Support
+### Tool Support
+- **System Tools**: tmux, git, curl, htop, ufw, zsh
+- **Docker Stack**: Complete Docker installation with Engine, CLI, Buildx, Compose, and user configuration
+- **SSH Server**: Secure remote access setup
 
-#### System Accessories
-- **tmux** - Terminal multiplexer for session management and persistent sessions
-- **git** - Version control system for development workflows
-- **curl** - Command line tool for data transfer and API testing
-- **htop** - Interactive process viewer for system monitoring
-- **ufw** - Uncomplicated Firewall for security configuration
-- **zsh** - Advanced shell with improved features over bash
+## Technical Implementation
 
-#### Services & Runtime
-- **SSH Server** - Secure remote access configuration (openssh-server)
-- **Docker Complete Stack** - Comprehensive Docker installation including:
-  - Docker Engine (Community Edition)
-  - Docker CLI tools
-  - containerd.io runtime
-  - Docker Buildx Plugin for multi-platform builds
-  - Docker Compose Plugin for orchestration
-  - Automatic user addition to docker group for non-root usage
-
-## Technical Architecture
-
-### Go Implementation Benefits
+### Go Benefits
 - **Fast Execution**: Compiled binary with minimal startup overhead
 - **Cross-Platform**: Native builds for Linux x86_64, ARM64, and macOS
 - **Single Binary**: No dependencies or runtime requirements
-- **Concurrent Operations**: Goroutines handle multiple installations efficiently
-- **Memory Efficient**: Low resource usage compared to interpreted languages
+- **Memory Efficient**: <10MB usage during execution
 
-### CLI Design Patterns
-- **Command Pattern**: Modular command structure with root, accessories, and docker commands
-- **Interactive Prompts**: User-friendly input handling with validation
-- **Error Handling**: Comprehensive error checking and user feedback
-- **Progress Indication**: Visual feedback during long-running operations
-
-## Development Learnings
-
-### Go CLI Development
-Through this project, I gained hands-on experience with:
-- **Cobra Framework**: Building structured CLI applications with subcommands
+### Development Learnings
+Through this project, I gained experience with:
+- **Go CLI Development**: Cobra framework and command patterns
+- **GoReleaser**: Modern release management with multi-platform builds
+- **Package Distribution**: DEB/RPM packages and GitHub releases
 - **Cross-compilation**: Targeting multiple platforms from single codebase
-- **Package Management**: Go modules and dependency management
-- **Error Handling**: Go's explicit error handling patterns
-- **Testing**: Unit testing CLI functionality and command execution
 
-### GoReleaser Integration
-This project taught me about **modern Go release management**:
-- **Automated Builds**: Multi-platform binary generation
-- **GitHub Releases**: Automatic release creation with changelogs
-- **Package Distribution**: DEB and RPM packages for Linux distributions
-- **Archive Management**: Properly named tar.gz files with checksums
-- **Release Workflows**: Integration with GitHub Actions for CI/CD
+## Usage Example
 
-## Usage Examples
-
-### Interactive Mode
 ```bash
 🚀 Server Setup CLI
 Choose an option:
@@ -99,101 +60,33 @@ Choose an option:
 Enter your choice (1-3): 1
 
 Choose accessories to install:
-1. tmux
-2. git
-3. curl
-4. htop
-5. ufw
-6. zsh
-Enter the number of the accessory to install (e.g. 1, 2, 3, etc.) or 'all' to install all accessories: 1 3 5
+1. tmux  2. git  3. curl  4. htop  5. ufw  6. zsh
+Enter numbers (e.g. 1 3 5) or 'all': 1 3 5
 
-Installing tmux...
-✅ Done: sudo apt-get install -y tmux
-Installing curl...
-✅ Done: sudo apt-get install -y curl
-Installing ufw...
-✅ Done: sudo apt-get install -y ufw
-Accessories installed successfully
-
-✅ Press Enter to return to main menu...
+Installing tmux... ✅ Done
+Installing curl... ✅ Done
+Installing ufw... ✅ Done
 ```
-
-### Flexible Selection Options
-- **Single Tool**: `1` - Install tmux only
-- **Multiple Tools**: `1 2 3` - Install tmux, git, and curl
-- **Everything**: `all` - Install all available accessories
-- **Menu Navigation**: Return to main menu for additional installations
 
 ## Release Management
 
-### Multi-Platform Distribution
-Each release provides comprehensive platform support:
-- **Linux x86_64**: `setup-server-cli_Linux_x86_64.tar.gz` - Standard servers
-- **Linux ARM64**: `setup-server-cli_Linux_arm64.tar.gz` - Raspberry Pi, ARM servers
-- **macOS Intel**: `setup-server-cli_Darwin_x86_64.tar.gz` - Intel Macs
-- **macOS Apple Silicon**: `setup-server-cli_Darwin_arm64.tar.gz` - M1/M2 Macs
-- **Debian Packages**: `.deb` files for Ubuntu/Debian systems
-- **RedHat Packages**: `.rpm` files for CentOS/RHEL systems
+Each release provides multi-platform support:
+- **Linux**: x86_64 and ARM64 builds
+- **macOS**: Intel and Apple Silicon builds  
+- **Packages**: DEB and RPM for Linux distributions
 - **Checksums**: SHA256 verification for security
 
-### Build Process
-```bash
-# Development builds (local testing)
-./build-cli.sh
+## Project Context
 
-# Release candidate (testing)
-./build-cli.sh release snapshot
+This tool addresses the workflow of **converting old hardware into development servers** by:
+- Reducing manual setup time from hours to minutes
+- Ensuring consistent environment across server instances
+- Codifying server setup knowledge for future reference
+- Providing reliable, repeatable configuration process
 
-# Tagged release (production)
-git tag v1.0.0
-git push origin v1.0.0
-./build-cli.sh release
-```
+## Links
 
-## Personal Server Setup Context
-
-This tool specifically addresses the workflow of **converting old hardware into development servers**:
-
-1. **Hardware Repurposing**: Transform unused laptops into useful development infrastructure
-2. **Consistent Environment**: Ensure identical setup across multiple server instances
-3. **Time Efficiency**: Reduce manual setup time from hours to minutes
-4. **Documentation**: Codify server setup knowledge for future reference
-5. **Reproducibility**: Reliable, repeatable server configuration process
-
-## Technical Specifications
-
-### System Requirements
-- **Ubuntu/Debian** based Linux distribution
-- **Sudo privileges** for package installation
-- **Internet connection** for downloading packages
-- **Architecture**: Supports x86_64 and ARM64 platforms
-
-### Performance Characteristics
-- **Binary Size**: ~5MB compiled binary
-- **Memory Usage**: <10MB during execution
-- **Installation Speed**: Parallel package installation where possible
-- **Error Recovery**: Graceful handling of package installation failures
-
-## Future Enhancements
-
-### Planned Features
-- **Cloudflare Tunnel Setup**: Automated tunnel configuration for secure public access
-- **Zsh Configuration**: Oh My Zsh installation and theme setup
-- **Nginx Installation**: Web server setup with basic configuration
-- **SSL Certificate Management**: Let's Encrypt integration for HTTPS
-- **Firewall Rules**: Advanced ufw configuration for specific services
-- **User Management**: Development user creation and SSH key setup
-
-### Extended Use Cases
-- **Docker Container Environment**: Automated container-based development setup
-- **Database Installation**: PostgreSQL, MySQL, Redis installation options
-- **Development Languages**: Node.js, Python, Java environment setup
-- **Monitoring Tools**: System monitoring and alerting configuration
-
-## Project Links
-
-- **Live Repository**: [github.com/ptt3199/setup-server-go-cli](https://github.com/ptt3199/setup-server-go-cli)
+- **Repository**: [github.com/ptt3199/setup-server-go-cli](https://github.com/ptt3199/setup-server-go-cli)
 - **Latest Release**: [GitHub Releases](https://github.com/ptt3199/setup-server-go-cli/releases/latest)
-- **Documentation**: Comprehensive README with installation and usage guides
 
-This project represents my journey into **Go development** and **CLI tool creation**, while solving a real-world problem of efficient server setup automation. The combination of interactive design, comprehensive tool support, and professional release management makes it a solid foundation for my server infrastructure needs.
+This project represents my journey into **Go development** and **CLI tool creation**, while solving the real-world problem of efficient server setup automation.
