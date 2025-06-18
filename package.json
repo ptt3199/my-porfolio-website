@@ -17,9 +17,9 @@
   "dependencies": {
     "@google/generative-ai": "^0.24.1",
     "@radix-ui/react-slot": "^1.2.2",
-    "@stagewise-plugins/react": "^0.4.7",
-    "@stagewise/toolbar": "^0.4.7",
-    "@stagewise/toolbar-next": "^0.4.7",
+    "@stagewise-plugins/react": "^0.4.8",
+    "@stagewise/toolbar": "^0.4.8",
+    "@stagewise/toolbar-next": "^0.4.8",
     "@tailwindcss/typography": "^0.5.10",
     "@vercel/analytics": "^1.5.0",
     "bcryptjs": "^3.0.2",

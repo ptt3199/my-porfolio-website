@@ -74,7 +74,7 @@ export default async function Image() {
             opacity: 0.7,
           }}
         >
-          phuongtanthanh.vercel.app
+          thanhpt.xyz
         </div>
       </div>
     ),

@@ -1,7 +1,7 @@
 ---
 name: "Personal Portfolio Website"
 description: "(This website) A modern, responsive portfolio website built with Next.js and TypeScript, featuring dynamic content management, AI-powered note creation with admin authentication, and a clean, accessible design with markdown-based CMS and comprehensive security features."
-link: "https://phuongtanthanh.vercel.app"
+link: "https://thanhpt.xyz"
 status: "active"
 featured: true
 startDate: "2025-05-12"
@@ -115,6 +115,6 @@ The website is built using Next.js 14 with TypeScript, leveraging the latest Rea
 
 ## Links
 
-- **Live Application**: [phuongtanthanh.vercel.app](https://phuongtanthanh.vercel.app)
+- **Live Application**: [thanhpt.xyz](https://thanhpt.xyz)
 - **Source Code**: [GitHub Repository](https://github.com/ptt3199/my-website)
 - **Admin Panel**: Accessible via lock icon when authenticated (production deployment)

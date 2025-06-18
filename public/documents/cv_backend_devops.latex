@@ -65,7 +65,7 @@
     0868 970 552 \\
     \href{https://linkedin.com/in/thanh-phuongtan/}{linkedin.com/in/thanh-phuongtan} \textbar\ 
     \href{https://github.com/ptt3199}{github.com/ptt3199} \textbar\ 
-    \href{https://phuongtanthanh.vercel.app}{phuongtanthanh.vercel.app}
+    \href{https://thanhpt.xyz}{thanhpt.xyz}
 \end{center}
 
 % --- TÓM TẮT CHUYÊN MÔN ---
@@ -115,7 +115,7 @@ Backend Engineer with hands-on experience in Python, FastAPI, Next.js, and cloud
     \item Modern, responsive portfolio with markdown-based CMS, AI-powered note creation, and secure admin authentication
     \item Integrated Google Gemini AI, GitHub API, and Stagewise for content management and development workflow
     \item Deployed on Vercel with dark/light mode, dynamic project/blog management, and professional contact form
-    \item \textbf{Live:} \href{https://phuongtanthanh.vercel.app}{phuongtanthanh.vercel.app} \textbar\ \textbf{GitHub:} \href{https://github.com/ptt3199/my-website}{github.com/ptt3199/my-website}
+    \item \textbf{Live:} \href{https://thanhpt.xyz}{thanhpt.xyz} \textbar\ \textbf{GitHub:} \href{https://github.com/ptt3199/my-website}{github.com/ptt3199/my-website}
 \end{itemize}
 \vspace{5 pt}
 \cvevent{Flash Card Learning App}{Next.js 15, Supabase, Clerk Auth, TypeScript}{2025 -- Ongoing}{}

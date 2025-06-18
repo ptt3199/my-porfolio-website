@@ -14,8 +14,8 @@ const structuredData = {
   "name": "Phuong Tan Thanh",
   "alternateName": "Phuong Tan Thanh",
   "description": "Backend Developer specializing in FastAPI, PostgreSQL, and microservices architecture",
-  "url": "https://phuongtanthanh.vercel.app",
-  "image": "https://phuongtanthanh.vercel.app/suit-avatar.png",
+  "url": "https://thanhpt.xyz",
+  "image": "https://thanhpt.xyz/suit-avatar.png",
   "sameAs": [
     "https://www.github.com/ptt3199",
     "https://www.linkedin.com/in/thanh-phuongtan/",

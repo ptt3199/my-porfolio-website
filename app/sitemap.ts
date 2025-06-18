@@ -3,7 +3,7 @@ import { getAllProjects } from '../lib/projects'
 import { getAllNotes } from '../lib/markdown'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = 'https://phuongtanthanh.vercel.app'
+  const baseUrl = 'https://thanhpt.xyz'
   
   // Get all projects and notes for dynamic routes
   const projects = getAllProjects()

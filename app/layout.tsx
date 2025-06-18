@@ -31,17 +31,17 @@ export const metadata: Metadata = {
     'Vietnam',
     'IPSIP'
   ],
-  authors: [{ name: 'Phuong Tan Thanh', url: 'https://phuongtanthanh.vercel.app' }],
+  authors: [{ name: 'Phuong Tan Thanh', url: 'https://thanhpt.xyz' }],
   creator: 'Phuong Tan Thanh',
   publisher: 'Phuong Tan Thanh',
-  metadataBase: new URL('https://phuongtanthanh.vercel.app'),
+  metadataBase: new URL('https://thanhpt.xyz'),
   alternates: {
     canonical: '/',
   },
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    url: 'https://phuongtanthanh.vercel.app',
+    url: 'https://thanhpt.xyz',
     title: 'Phuong Tan Thanh | Full Stack Developer',
     description: 'Experienced Backend Developer specializing in FastAPI, PostgreSQL, and microservices architecture. Building scalable systems and elegant solutions.',
     siteName: 'Phuong Tan Thanh Portfolio',

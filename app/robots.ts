@@ -12,7 +12,7 @@ export default function robots(): MetadataRoute.Robots {
         '/documents/', // Prevent indexing of private documents
       ],
     },
-    sitemap: 'https://phuongtanthanh.vercel.app/sitemap.xml',
-    host: 'https://phuongtanthanh.vercel.app',
+    sitemap: 'https://thanhpt.xyz/sitemap.xml',
+    host: 'https://thanhpt.xyz',
   }
 } 
