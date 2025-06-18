@@ -44,20 +44,32 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   ]
 
   // Dynamic project routes
-  const projectRoutes = projects.map((project) => ({
-    url: `${baseUrl}/projects/${project.id}`,
-    lastModified: new Date(project.startDate),
-    changeFrequency: 'monthly' as const,
-    priority: 0.7,
-  }))
+  const projectRoutes = projects.map((project) => {
+    // Validate and parse date, fallback to current date if invalid
+    const projectDate = new Date(project.startDate)
+    const lastModified = isNaN(projectDate.getTime()) ? new Date() : projectDate
+    
+    return {
+      url: `${baseUrl}/projects/${project.id}`,
+      lastModified,
+      changeFrequency: 'monthly' as const,
+      priority: 0.7,
+    }
+  })
 
   // Dynamic note routes
-  const noteRoutes = notes.map((note) => ({
-    url: `${baseUrl}/notes/${note.id}`,
-    lastModified: new Date(note.publishedAt),
-    changeFrequency: 'monthly' as const,
-    priority: 0.6,
-  }))
+  const noteRoutes = notes.map((note) => {
+    // Validate and parse date, fallback to current date if invalid
+    const noteDate = new Date(note.publishedAt)
+    const lastModified = isNaN(noteDate.getTime()) ? new Date() : noteDate
+    
+    return {
+      url: `${baseUrl}/notes/${note.id}`,
+      lastModified,
+      changeFrequency: 'monthly' as const,
+      priority: 0.6,
+    }
+  })
 
   return [...staticRoutes, ...projectRoutes, ...noteRoutes]
 } 
