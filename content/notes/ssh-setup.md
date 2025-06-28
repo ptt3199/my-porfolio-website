@@ -1,3 +1,12 @@
+---
+title: "SSH Setup"
+description: "Setup SSH by username and password or private key"
+publishedAt: "2025-06-29"
+tags: ["ssh", "setup", "server", "client"]
+category: "TIL"
+readTime: 1
+tldr: "Setup SSH by username and password or private key"
+---
 # SSH Setup
 
 ## 1. SSH by username and password
